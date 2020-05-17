@@ -1,4 +1,5 @@
-source(system.file(file.path('tests', 'test_utils.R'), package = 'nimble'))
+# source(system.file(file.path('tests', 'test_utils.R'), package = 'nimble'))
+source("tests/testthat/test_utils.R")
 context("Testing of different Filtering Algorithms")
 
 ### particle filter testing follows similar steps to MCMC testing.
