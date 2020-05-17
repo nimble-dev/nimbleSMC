@@ -786,8 +786,8 @@ test_filter <- function(example, model, data = list(), inits = list(),
         }
         if(verbose) cat("Building filter\n")
         if(filterType == "bootstrap"){
-            if(!is.null(filterControl))  Rfilter <- buildBootstrapFilterTEST(Rmodel, nodes = latentNodes, control = filterControl)
-            else Rfilter <- buildBootstrapFilterTEST(Rmodel, nodes = latentNodes, control = list(saveAll = TRUE, thresh = 0))
+            if(!is.null(filterControl))  Rfilter <- buildBootstrapFilter(Rmodel, nodes = latentNodes, control = filterControl)
+            else Rfilter <- buildBootstrapFilter(Rmodel, nodes = latentNodes, control = list(saveAll = TRUE, thresh = 0))
         }
         if(filterType == "auxiliary"){
             if(!is.null(filterControl))  Rfilter <- buildAuxiliaryFilter(Rmodel, nodes = latentNodes, control = filterControl)
