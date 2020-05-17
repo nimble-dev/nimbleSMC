@@ -199,7 +199,7 @@ IF2Step <- nimbleFunction(
 #'    \item{m}{A single integer specifying the number of particles to use for each run of the filter. }
 #'    \item{n}{A single integer specifying the number of overall filter iterations to run. }
 #'    \item{alpha}{A double specifying the cooling factor to use for the IF2 algorithm. }
-#'
+#'  }
 #'  The \code{run} fuction will return a vector with the estimated MLE.  Additionally, once the specialized algorithm has been run, it can be continued for additional iterations by calling the \code{continueRun} method.
 #'
 #' @section Reparameterization:

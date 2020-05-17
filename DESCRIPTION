@@ -2,15 +2,23 @@ Package: nimbleSMC
 Title: Sequential Monte Carlo methods for NIMBLE
 Version: 0.0.1
 Date: 2020-05-15
-Maintainer: ???
-Authors@R: c(person("Nick", "Michaud", role = c("aut", "cre"),
-                     email = "ben.goldstein@berkeley.edu"),
+Maintainer: Benjamin R. Goldstein <ben.goldstein@berkeley.edu>
+Authors@R: c(person("Nick", "Michaud", role = c("aut")),
               person("Christopher", "Paciorek", role = "aut"),
+              person("Benjamin R.", "Goldstein", role = c("aut", "cre"), 
+                      email = "ben.goldstein@berkeley.edu"),
               person("Perry", "de Valpine", role = "aut"))
-
 License: BSD_3_clause + file LICENSE | GPL (>= 2)
 Depends: R (>= 3.1.2), nimble
 Encoding: UTF-8
 LazyData: true
 URL: https://github.com/nimble-dev/nimbleSMC
 Collate:
+  filtering_auxiliary.R
+  filtering_bootstrap.R
+  filtering_enkf.R
+  filtering_IF2.R
+  filtering_liuwest.R
+  filtering_resamplers.R
+  filtering_utils.R
+RoxygenNote: 7.1.0
