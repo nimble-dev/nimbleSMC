@@ -1,6 +1,6 @@
 
 help_message <-
-"Run tests in nimbleEcology/tests/
+"Run tests in nimbleSMC/tests/testthat
 Usage:
   ./run_tests.R       [OPTIONS]   # Run the default set of tests.
   ./run_tests.R NAMES [OPTIONS]   # Run a custom set of tests, e.g. 'filtering'
@@ -65,8 +65,8 @@ runTest <- function(test, logToFile = FALSE, runViaTestthat = TRUE) {
         script <- paste0('library(methods);',
                          'library(testthat);',
                          'library(nimble);',
-                         'library(nimbleEcology);',
-                         'tryCatch(test_package("nimbleEcology", "^', name, '$",',
+                         'library(nimbleSMC);',
+                         'tryCatch(test_package("nimbleSMC", "^', name, '$",',
                          '                      reporter = ', reporter, '),',
                          '  error = function(e) quit(status = 1))')
         command <- c(runner, '-e', custom_shQuote(script))
