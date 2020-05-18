@@ -1,4 +1,6 @@
 .onAttach <- function(libname, pkgname) {
-  capture.output(lapply(as.list(list.files(path = "R", pattern = "filtering_.*R$", full.names = T)), source))
+  ignored_nimbleSMC_loading_message <- 
+    lapply(as.list(list.files(path = "R", pattern = "filtering_.*R$", full.names = T)), source)
+  rm(ignored_nimbleSMC_loading_message)
   packageStartupMessage("(TEST) nimbleSMC is loaded!")
 }
