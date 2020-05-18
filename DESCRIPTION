@@ -1,5 +1,10 @@
 Package: nimbleSMC
-Title: Sequential Monte Carlo methods for NIMBLE
+Title: Sequential Monte Carlo methods for 'nimble'
+Description: Sequential Monte Carlo methods to extend the 'nimble' modeling package.
+  Includes five particle filter algorithms for dynamic use with state space models: 
+  "Auxilliary", "Bootstrap", "Ensemble Kalman filter", "IF2", and "Liu-West". 
+  See the paper "Sequential Monte Carlo Methods in the nimble R Package" 
+  (Michaud et al. 2020) for more details.
 Version: 0.0.1
 Date: 2020-05-15
 Maintainer: Benjamin R. Goldstein <ben.goldstein@berkeley.edu>
@@ -10,6 +15,7 @@ Authors@R: c(person("Nick", "Michaud", role = c("aut")),
               person("Perry", "de Valpine", role = "aut"))
 License: BSD_3_clause + file LICENSE | GPL (>= 2)
 Depends: R (>= 3.1.2), nimble
+Suggests: testthat
 Encoding: UTF-8
 LazyData: true
 URL: https://github.com/nimble-dev/nimbleSMC
