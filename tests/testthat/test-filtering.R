@@ -1,5 +1,9 @@
-# source(system.file(file.path('tests', 'test_utils.R'), package = 'nimble'))
+require(testthat)
+require(methods)
+require(nimble)
 source("tests/testthat/test_utils.R")
+
+##### SET PARAMETERS #####
 context("Testing of different Filtering Algorithms")
 
 ### particle filter testing follows similar steps to MCMC testing.
@@ -14,19 +18,22 @@ options(warn = 1)
 nimbleVerboseSetting <- nimbleOptions('verbose')
 nimbleOptions(verbose = FALSE)
 
-goldFileName <- 'filteringTestLog_Correct.Rout'
-tempFileName <- 'filteringTestLog.Rout'
-generatingGoldFile <- !is.null(nimbleOptions('generateGoldFileForFilteringTesting'))
-outputFile <- if(generatingGoldFile) file.path(nimbleOptions('generateGoldFileForFilteringTesting'), goldFileName) else tempFileName
+oldWidth <- getOption("width")
+options(width = 1000)
 
-# sink(outputFile)
+goldFileName <- 'tests/filteringTestLog_Correct.Rout'
+tempFileName <- 'tests/filteringTestLog.Rout'
+generatingGoldFile <- !is.null(nimbleOptions('generateGoldFileForFilteringTesting'))
+outputFile <- if (generatingGoldFile) file.path(nimbleOptions('generateGoldFileForFilteringTesting'), goldFileName) else tempFileName
+
+sink(outputFile)
 
 nimbleProgressBarSetting <- nimbleOptions('MCMCprogressBar')
 nimbleOptions(MCMCprogressBar = FALSE)
 
 ### basic scalar latent node example, no top-level params
 
-
+##### BEGIN TESTING #####
 code <- nimbleCode({
   x0 ~ dnorm(0,1)
   x[1] ~ dnorm(a + b*x0, 1)
@@ -364,11 +371,12 @@ sink(NULL)
 
 if(!generatingGoldFile) {
     trialResults <- readLines(tempFileName)
-    correctResults <- readLines(system.file(file.path('tests', goldFileName), package = 'nimble'))
+    # correctResults <- readLines(system.file(file.path('tests', goldFileName), package = 'nimble'))
+    correctResults <- readLines("tests/filteringTestLog_Correct.Rout")
     compareFilesByLine(trialResults, correctResults)
 }
 
 options(warn = RwarnLevel)
 nimbleOptions(verbose = nimbleVerboseSetting)
 nimbleOptions(MCMCprogressBar = nimbleProgressBarSetting)
-
+options(width = oldWidth)

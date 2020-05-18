@@ -1,4 +1,8 @@
-source(system.file(file.path('tests', 'test_utils.R'), package = 'nimble'))
+require(testthat)
+require(methods)
+require(nimble)
+source("tests/testthat/test_utils.R")
+
 context("Testing of different Filtering Algorithms")
 
 ### particle filter testing follows similar steps to MCMC testing.
@@ -277,3 +281,4 @@ test_resampler('systematicResampleFunction', wtsList)
 test_resampler('stratifiedResampleFunction', wtsList)
 test_resampler('residualResampleFunction', wtsList)
 test_resampler('multinomialResampleFunction', wtsList)
+
