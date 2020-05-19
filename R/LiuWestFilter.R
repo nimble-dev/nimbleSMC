@@ -10,13 +10,15 @@
 ##  option to skip auxiliary step in filter (Ionides '11), which will also allow for threshold resampling
 
 LWStepVirtual <- nimbleFunctionVirtual(
-  run = function(m = integer())
+  run = function(m = integer()) {
     returnType(double())
+  }
 )
 
 LWSetMeanVirtual <- nimbleFunctionVirtual(
-  run = function()
+  run = function() {
     returnType()
+  }
 )
 
 # Has a return_mean method which returns the mean of a normally distributed nimble node.

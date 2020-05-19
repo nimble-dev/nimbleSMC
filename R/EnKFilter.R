@@ -318,5 +318,5 @@ buildEnsembleKF <- nimbleFunction(
     for(iNode in seq_along(ENKFStepFunctions)) { 
       ENKFStepFunctions[[iNode]]$run(m)
     }
-  },  where = getLoadingNamespace()
+  }, where = getLoadingNamespace()
 )

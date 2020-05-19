@@ -22,7 +22,7 @@ initializeParamSwarm <- nimbleFunction(
             nimCopy(model, mvEWSamples, nodes = paramNodes, row = i)
         }
         return(0)
-    }
+    }, where = getLoadingNamespace()
 )
 
 
@@ -76,8 +76,9 @@ IF2Step0 <- nimbleFunction(
 )
 
 IF2StepVirtual <- nimbleFunctionVirtual(
-    run = function(m = integer(), n = integer(), alpha = double())
+    run = function(m = integer(), n = integer(), alpha = double()) {
         returnType(double())
+    }
 )
 
 IF2Step <- nimbleFunction(
