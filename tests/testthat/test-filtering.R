@@ -788,8 +788,8 @@ nimbleOptions(verbose = FALSE)
 oldWidth <- getOption("width")
 options(width = 1000)
 
-goldFileName <- 'tests/filteringTestLog_Correct.Rout'
-tempFileName <- 'tests/filteringTestLog.Rout'
+goldFileName <- 'filteringTestLog_Correct.Rout'
+tempFileName <- 'filteringTestLog.Rout'
 generatingGoldFile <- !is.null(nimbleOptions('generateGoldFileForFilteringTesting'))
 outputFile <- if (generatingGoldFile) file.path(nimbleOptions('generateGoldFileForFilteringTesting'), goldFileName) else tempFileName
 
@@ -1136,10 +1136,10 @@ test_that("Test findLatentNodes", {
 
 sink(NULL)
 
-if(!generatingGoldFile) {
+if (!generatingGoldFile) {
     trialResults <- readLines(tempFileName)
-    # correctResults <- readLines(system.file(file.path('tests', goldFileName), package = 'nimble'))
-    correctResults <- readLines("tests/filteringTestLog_Correct.Rout")
+    correctResults <- readLines(system.file(file.path('test-utils', goldFileName), package = 'nimbleSMC'))
+    # correctResults <- readLines("tests/filteringTestLog_Correct.Rout")
     compareFilesByLine(trialResults, correctResults)
 }
 

@@ -10,6 +10,7 @@ Date: 2020-05-15
 Maintainer: Benjamin R. Goldstein <ben.goldstein@berkeley.edu>
 Authors@R: c(person("Nick", "Michaud", role = c("aut")),
               person("Christopher", "Paciorek", role = "aut"),
+              person("Daniel", "Turek", role = "aut"),
               person("Benjamin R.", "Goldstein", role = c("aut", "cre"), 
                       email = "ben.goldstein@berkeley.edu"),
               person("Perry", "de Valpine", role = "aut"))
@@ -25,6 +26,7 @@ Collate:
   EnKFilter.R
   IF2Filter.R
   LiuWestFilter.R
+  MCMCSamplers.R
   resamplers.R
   utils.R
   zzz.R
