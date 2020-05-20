@@ -793,7 +793,7 @@ tempFileName <- 'filteringTestLog.Rout'
 generatingGoldFile <- !is.null(nimbleOptions('generateGoldFileForFilteringTesting'))
 outputFile <- if (generatingGoldFile) file.path(nimbleOptions('generateGoldFileForFilteringTesting'), goldFileName) else tempFileName
 
-# sink(outputFile)
+sink(outputFile)
 
 nimbleProgressBarSetting <- nimbleOptions('MCMCprogressBar')
 nimbleOptions(MCMCprogressBar = FALSE)
