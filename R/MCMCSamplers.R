@@ -1,6 +1,6 @@
 #' Particle Filtering MCMC Sampling Algorithms
 #' 
-#' Details of the MCMC sampling algorithms provided with the NIMBLE MCMC engine
+#' Details of the particle filtering MCMC sampling algorithms provided in nimbleSMC.
 #'
 #' @param model (uncompiled) model on which the MCMC is to be run
 #' @param mvSaved \code{modelValues} object to be used to store MCMC samples
@@ -50,6 +50,8 @@
 #' 
 #' @name SMCsamplers
 #' @aliases samplers sampler RW_PF RW_PF_block sampler_RW_PF sampler_RW_PF_block 
+#' 
+#' 
 
 
 
@@ -223,7 +225,7 @@ sampler_RW_PF <- nimbleFunction(
             storeParticleLP <<- -Inf
             gamma1 <<- 0
         }
-    ), where = getLoadingNamespace()
+    )
 )
 
 
@@ -425,5 +427,5 @@ sampler_RW_PF_block <- nimbleFunction(
             timesAdapted  <<- 0
             my_calcAdaptationFactor$reset()
         }
-    ), where = getLoadingNamespace()
+    )
 )

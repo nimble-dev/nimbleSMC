@@ -24,7 +24,7 @@ sampler_RW_PF_block(model, mvSaved, target, control)
 \item{control}{named list that controls the precise behavior of the sampler, with elements specific to \code{samplertype}.  The default values for control list are specified in the setup code of each sampling algorithm.  Descriptions of each sampling algorithm, and the possible customizations for each sampler (using the \code{control} argument) appear below.}
 }
 \description{
-Details of the MCMC sampling algorithms provided with the NIMBLE MCMC engine
+Details of the particle filtering MCMC sampling algorithms provided in nimbleSMC.
 }
 \section{RW_PF sampler}{
 

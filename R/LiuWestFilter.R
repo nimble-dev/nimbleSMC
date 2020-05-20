@@ -30,7 +30,7 @@ paramMean <- nimbleFunction(
   },
     run = function() {
         model[[node]] <<- model$getParam(node, 'mean')
-    }, where = getLoadingNamespace()                                    
+    }
 )
 
 LWSetParVirtual <- nimbleFunctionVirtual(
@@ -104,7 +104,7 @@ doPars <- nimbleFunction(
       returnType(double(2))
       return(matOut)
     } 
-  ), where = getLoadingNamespace())
+  ))
 
 
 LWStep <- nimbleFunction(
@@ -285,7 +285,7 @@ LWStep <- nimbleFunction(
        } 
      }
   return(0)
-  },  where = getLoadingNamespace()
+  }
 )
 
 # Has two methods: shrinkMean, which shrinks each parameter particle towards
@@ -327,7 +327,7 @@ LWparFunc <- nimbleFunction(
       
       return(varMat)
     }
-  ), where = getLoadingNamespace() 
+  )
 )
 
 #' Create a Liu and West particle filter algorithm.  
@@ -506,7 +506,7 @@ buildLiuWestFilter <- nimbleFunction(
        LWStepFunctions[[iNode]]$run(m)
     }
     return()
-  },  where = getLoadingNamespace()
+  }
 )
 
 

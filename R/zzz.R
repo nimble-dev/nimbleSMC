@@ -1,9 +1,4 @@
-.onAttach <- function(libname, pkgname) {
-
-  packageStartupMessage("(TEST) nimbleSMC")
-  sourceFiles <- as.list(list.files(path = "R", pattern = ".*R$", full.names = T))
-  ignored_nimbleSMC_loading_message <- lapply(sourceFiles[!grepl("zzz", sourceFiles)], source)
-  rm(ignored_nimbleSMC_loading_message)
-  packageStartupMessage("Source files loaded.")
-
-}
+# .onAttach <- function(libname, pkgname) {
+# # This function can be used if we need to do anything on package loading
+#   
+# }

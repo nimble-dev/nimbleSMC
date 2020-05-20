@@ -234,7 +234,7 @@ test_filter <- function(example, model, data = list(), inits = list(),
         }
         if(verbose) cat("Building filter\n")
         if(filterType == "bootstrap"){
-            if(!is.null(filterControl))  Rfilter <- buildBootstrapFilter(Rmodel, nodes = latentNodes, control = filterControl)
+            if(!is.null(filterControl))  Rfilter <- buildBootstrapFilter(Rmodel, nodes = latentNodes, control = filterControl) # THIS IS THE FIRST LINE WHERE AN ERROR IS THROWN under the current namespace issue mystery
             else Rfilter <- buildBootstrapFilter(Rmodel, nodes = latentNodes, control = list(saveAll = TRUE, thresh = 0))
         }
         if(filterType == "auxiliary"){
@@ -793,7 +793,7 @@ tempFileName <- 'filteringTestLog.Rout'
 generatingGoldFile <- !is.null(nimbleOptions('generateGoldFileForFilteringTesting'))
 outputFile <- if (generatingGoldFile) file.path(nimbleOptions('generateGoldFileForFilteringTesting'), goldFileName) else tempFileName
 
-sink(outputFile)
+# sink(outputFile)
 
 nimbleProgressBarSetting <- nimbleOptions('MCMCprogressBar')
 nimbleOptions(MCMCprogressBar = FALSE)

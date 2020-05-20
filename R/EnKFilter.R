@@ -36,7 +36,7 @@ enkfMultFunc = nimbleFunction(
       returnType(double(2))
       return(model$getParam(thisData, 'cov'))
     }
-  ), where = getLoadingNamespace()
+  )
 )
 
 #  returns mean (as vector) and var (as matrix) for normal data node  
