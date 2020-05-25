@@ -169,7 +169,7 @@ LWStep <- nimbleFunction(
     allLatentNodes <- model$expandNodeNames(thisNode)
     numLatentNodes <- length(allLatentNodes)
     for(i in 1:numLatentNodes){
-      setMeanList[[i]] <- paramMean(model, allLatentNodes[i])
+      setMeanList[[i]] <- nimbleSMC:::paramMean(model, allLatentNodes[i])
     }
 
     if(singleParam)
