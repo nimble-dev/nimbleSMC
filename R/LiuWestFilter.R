@@ -114,7 +114,7 @@ LWStep <- nimbleFunction(
     notFirst <- iNode != 1
     prevNode <- nodes[if(notFirst) iNode-1 else iNode]
 
-    modelSteps <- particleFilter_splitModelSteps(model, nodes, iNode, notFirst)
+    modelSteps <- nimbleSMC:::particleFilter_splitModelSteps(model, nodes, iNode, notFirst)
     prevDeterm <- modelSteps$prevDeterm
     calc_thisNode_self <- modelSteps$calc_thisNode_self
     calc_thisNode_deps <- modelSteps$calc_thisNode_deps
@@ -154,18 +154,18 @@ LWStep <- nimbleFunction(
     numParams <- sum(paramVarDims)
     numParamVars <- length(paramVars)
     paramInds <- c(0,cumsum(paramVarDims)) 
-    parCalc <- LWparFunc(d, numParams, prevInd) # d is discount factor, default to 0.99  
+    parCalc <- nimbleSMC:::LWparFunc(d, numParams, prevInd) # d is discount factor, default to 0.99  
     singleParam <- (numParams == 1)
     
     ##  varSize keeps track of the size of each parameter we are estimating
     varSize <- rep(0, length(paramInds)-1)
-    doVarList <- nimbleFunctionList(LWSetParVirtual)
+    doVarList <- nimbleFunctionList(nimbleSMC:::LWSetParVirtual)
     for(i in 1:numParamVars){
-      doVarList[[i]] <- doPars(paramVars[i], mvWSamples, mvEWSamples)
+      doVarList[[i]] <- nimbleSMC:::doPars(paramVars[i], mvWSamples, mvEWSamples)
       varSize[i] <- paramInds[i+1]-paramInds[i]
     }
     
-    setMeanList <- nimbleFunctionList(LWSetMeanVirtual)
+    setMeanList <- nimbleFunctionList(nimbleSMC:::LWSetMeanVirtual)
     allLatentNodes <- model$expandNodeNames(thisNode)
     numLatentNodes <- length(allLatentNodes)
     for(i in 1:numLatentNodes){
@@ -488,9 +488,9 @@ buildLiuWestFilter <- nimbleFunction(
       if(identical(x$size, numeric(0))) return(1)
       return(x$size)}))
     #names <- model$getSymbolTable()$getSymbolObjects()[[latentVars]]$name
-    LWStepFunctions <- nimbleFunctionList(LWStepVirtual)
+    LWStepFunctions <- nimbleFunctionList(nimbleSMC:::LWStepVirtual)
     for(iNode in seq_along(nodes))
-      LWStepFunctions[[iNode]] <- LWStep(model,  mvWSamples, mvEWSamples, nodes, paramVarDims, 
+      LWStepFunctions[[iNode]] <- nimbleSMC:::LWStep(model,  mvWSamples, mvEWSamples, nodes, paramVarDims, 
                                          iNode, params, paramVars, names, saveAll, d, silent)
     
   },

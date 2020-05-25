@@ -110,6 +110,7 @@ fillIndices <- function(node, info, returnExpr = FALSE) {
     return(node)    
 }
 
+#' @export
 findLatentNodes <- function(model, nodes, timeIndex = NULL) {
     ## Determine set of latent 'nodes', one per time point.
     ## Note that each time point might have one node or a set of nodes.

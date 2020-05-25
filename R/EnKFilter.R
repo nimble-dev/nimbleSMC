@@ -107,13 +107,13 @@ ENKFStep <- nimbleFunction(
     # 0 vector
     nNodes <- length(yDim)
     #determine whether each data node is multivariate or scalar and assign correct function
-    ENKFFuncList <- nimbleFunctionList(ENKFFuncVirtual) 
+    ENKFFuncList <- nimbleFunctionList(nimbleSMC:::ENKFFuncVirtual) 
     for(yNode in 1:length(yDim)){
       if(yDim[yNode] > 1){
-        ENKFFuncList[[yNode]] <- enkfMultFunc(model, thisData[yNode])
+        ENKFFuncList[[yNode]] <- nimbleSMC:::enkfMultFunc(model, thisData[yNode])
       }
       else{
-        ENKFFuncList[[yNode]] <- enkfScalFunc(model, thisData[yNode])
+        ENKFFuncList[[yNode]] <- nimbleSMC:::enkfScalFunc(model, thisData[yNode])
       } 
     }
   },
@@ -258,7 +258,7 @@ buildEnsembleKF <- nimbleFunction(
     if(is.null(saveAll)) saveAll <- FALSE
     if(is.null(initModel)) initModel <- TRUE 
     ## get latent state info
-    nodes <- findLatentNodes(model, nodes, timeIndex)
+    nodes <- nimbleSMC:::findLatentNodes(model, nodes, timeIndex)
     dims <- lapply(nodes, function(n) nimDim(model[[n]]))
     if(length(unique(dims)) > 1) stop('sizes or dimension of latent states varies')
     xDim <- dims[[1]]
@@ -306,9 +306,9 @@ buildEnsembleKF <- nimbleFunction(
     
     my_initializeModel <- initializeModel(model)
     names <- names[1]
-    ENKFStepFunctions <- nimbleFunctionList(ENKFStepVirtual)
+    ENKFStepFunctions <- nimbleFunctionList(nimbleSMC:::ENKFStepVirtual)
     for(iNode in seq_along(nodes)){
-      ENKFStepFunctions[[iNode]] <- ENKFStep(model, mvSamples, nodes, 
+      ENKFStepFunctions[[iNode]] <- nimbleSMC:::ENKFStep(model, mvSamples, nodes, 
                                              iNode, xDim, yDim[[iNode]], saveAll, names, silent) 
     }
   },
