@@ -53,8 +53,7 @@
 #' 
 #' 
 
-
-
+testNF <- nimbleFunction
 
 #######################################################################################
 ### RW_PF, does a univariate RW, but using a particle filter likelihood function ######
