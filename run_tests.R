@@ -64,6 +64,7 @@ runTest <- function(test, logToFile = FALSE, runViaTestthat = TRUE) {
         name <- gsub('test-(.*)\\.R', '\\1', test)
         script <- paste0('library(methods);',
                          'library(testthat);',
+                         'devtools::install_github("nimble-dev/nimble/packages/nimble", ref = "noSMC");',
                          'library(nimble);',
                          'library(nimbleSMC);',
                          'tryCatch(test_package("nimbleSMC", "^', name, '$",',
