@@ -15,7 +15,7 @@ Authors@R: c(person("Nick", "Michaud", role = c("aut")),
                       email = "ben.goldstein@berkeley.edu"),
               person("Perry", "de Valpine", role = "aut"))
 License: BSD_3_clause + file LICENSE | GPL (>= 2)
-Depends: R (>= 3.1.2), nimble
+Depends: R (>= 3.1.2), nimble, devtools
 Suggests: testthat
 Encoding: UTF-8
 LazyData: true
