@@ -55,7 +55,7 @@ auxFStep <- nimbleFunction(
     prevNode <- nodes[if(notFirst) iNode-1 else iNode]
 
     notFirst <- iNode != 1
-    modelSteps <- nimbleSMC:::particleFilter_splitModelSteps(model, nodes, iNode, notFirst)
+    modelSteps <- particleFilter_splitModelSteps(model, nodes, iNode, notFirst)
     prevDeterm <- modelSteps$prevDeterm
     calc_thisNode_self <- modelSteps$calc_thisNode_self
     calc_thisNode_deps <- modelSteps$calc_thisNode_deps
@@ -88,32 +88,32 @@ auxFStep <- nimbleFunction(
       prevInd <- 1 
     }
 
-    auxFuncList <- nimbleFunctionList(nimbleSMC:::auxFuncVirtual) 
+    auxFuncList <- nimbleFunctionList(auxFuncVirtual) 
     allLatentNodes <- model$expandNodeNames(calc_thisNode_self, sort = TRUE) ## They should already be sorted, but sorting here is a failsafe.
     numLatentNodes <- length(allLatentNodes)
     if(lookahead == "mean"){
        for(i in 1:numLatentNodes)
-         auxFuncList[[i]] <- nimbleSMC:::auxLookFunc(model, allLatentNodes[i])
+         auxFuncList[[i]] <- auxLookFunc(model, allLatentNodes[i])
     }
     else{
       for(i in 1:numLatentNodes)
-        auxFuncList[[i]] <- nimbleSMC:::auxSimFunc(model,  allLatentNodes)
+        auxFuncList[[i]] <- auxSimFunc(model,  allLatentNodes)
     }
     ess <- 0
-    resamplerFunctionList <- nimbleFunctionList(nimbleSMC:::resamplerVirtual)
+    resamplerFunctionList <- nimbleFunctionList(resamplerVirtual)
     defaultResamplerFlag <- FALSE
     if(resamplingMethod == 'default'){
-      resamplerFunctionList[[1]] <- nimbleSMC:::residualResampleFunction()
+      resamplerFunctionList[[1]] <- residualResampleFunction()
       defaultResamplerFlag <- TRUE
     }
     if(resamplingMethod == 'residual')
-      resamplerFunctionList[[1]] <- nimbleSMC:::residualResampleFunction()
+      resamplerFunctionList[[1]] <- residualResampleFunction()
     if(resamplingMethod == 'multinomial')
-      resamplerFunctionList[[1]] <- nimbleSMC:::multinomialResampleFunction()
+      resamplerFunctionList[[1]] <- multinomialResampleFunction()
     if(resamplingMethod == 'stratified')
-      resamplerFunctionList[[1]] <- nimbleSMC:::stratifiedResampleFunction()
+      resamplerFunctionList[[1]] <- stratifiedResampleFunction()
     if(resamplingMethod == 'systematic')
-      resamplerFunctionList[[1]] <- nimbleSMC:::systematicResampleFunction()
+      resamplerFunctionList[[1]] <- systematicResampleFunction()
   },
   run = function(m = integer()) {
     returnType(double())
@@ -330,7 +330,7 @@ buildAuxiliaryFilter <- nimbleFunction(
            "stratified", or "residual". ')
     
     ## Latent state info.
-    nodes <- nimbleSMC:::findLatentNodes(model, nodes, timeIndex)  
+    nodes <- findLatentNodes(model, nodes, timeIndex)  
 
     dims <- lapply(nodes, function(n) nimDim(model[[n]]))
     if(length(unique(dims)) > 1)
@@ -383,9 +383,9 @@ buildAuxiliaryFilter <- nimbleFunction(
     }
     
     names <- names[1]
-    auxStepFunctions <- nimbleFunctionList(nimbleSMC:::auxStepVirtual)
+    auxStepFunctions <- nimbleFunctionList(auxStepVirtual)
     for(iNode in seq_along(nodes))
-      auxStepFunctions[[iNode]] <- nimbleSMC:::auxFStep(model, mvEWSamples, mvWSamples,
+      auxStepFunctions[[iNode]] <- auxFStep(model, mvEWSamples, mvWSamples,
                                             nodes, iNode, names, saveAll, 
                                             smoothing, lookahead, 
                                             resamplingMethod, silent)

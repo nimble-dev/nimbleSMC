@@ -88,7 +88,7 @@ IF2Step <- nimbleFunction(
         isSecond <- iNode == 2
         prevNode <- latentNodes[if(notFirst) iNode-1 else iNode]
 
-        modelSteps <- nimbleSMC:::particleFilter_splitModelSteps(model, latentNodes, iNode, notFirst)
+        modelSteps <- particleFilter_splitModelSteps(model, latentNodes, iNode, notFirst)
         prevDeterm <- modelSteps$prevDeterm
         calc_thisNode_self <- modelSteps$calc_thisNode_self
         calc_thisNode_deps <- modelSteps$calc_thisNode_deps
@@ -347,23 +347,23 @@ buildIteratedFilter2 <- nimbleFunction(
         if(length(sigma) == 1)
             sigma <- c(sigma, 0)
         
-        initializeParamSwarmFunction <- nimbleSMC:::initializeParamSwarm(model, mvEWSamples, params,
+        initializeParamSwarmFunction <- initializeParamSwarm(model, mvEWSamples, params,
                                                        numParams, initParamSigma)
         if(is.null(baselineNode)) {
             ## use params[1] simply as a dummy as IF2Step0Function needs to exist
             baselineNode <- params[1]
-            IF2Step0Function <- nimbleSMC:::IF2Step0(model,  mvEWSamples, params[1], latentVar,
+            IF2Step0Function <- IF2Step0(model,  mvEWSamples, params[1], latentVar,
                                           params, numParams, sigma, timeLength, silent)
             baseline <- FALSE
         } else {
-            IF2Step0Function <- nimbleSMC:::IF2Step0(model,  mvEWSamples, baselineNode, latentVar,
+            IF2Step0Function <- IF2Step0(model,  mvEWSamples, baselineNode, latentVar,
                                          params, numParams, sigma, timeLength, silent)
             baseline <- TRUE
         }
         
-        IF2StepFunctions <- nimbleFunctionList(nimbleSMC:::IF2StepVirtual)
+        IF2StepFunctions <- nimbleFunctionList(IF2StepVirtual)
         for(iNode in seq_along(nodes))
-            IF2StepFunctions[[iNode]] <- nimbleSMC:::IF2Step(model,  mvWSamples, mvEWSamples, nodes, latentVar, baselineNode,
+            IF2StepFunctions[[iNode]] <- IF2Step(model,  mvWSamples, mvEWSamples, nodes, latentVar, baselineNode,
                                                  baseline, iNode, params, numParams, sigma, timeLength, silent)
 
         if(numParams == 1) {

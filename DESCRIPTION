@@ -1,33 +1,41 @@
 Package: nimbleSMC
-Title: Sequential Monte Carlo methods for 'nimble'
-Description: Sequential Monte Carlo methods to extend the 'nimble' modeling package.
-  Includes five particle filter algorithms for dynamic use with state space models: 
-  "Auxilliary", "Bootstrap", "Ensemble Kalman filter", "IF2", and "Liu-West". 
-  See the paper "Sequential Monte Carlo Methods in the nimble R Package" 
-  (Michaud et al. 2020) for more details.
+Title: Sequential Monte Carlo Methods for 'nimble'
+Description: Sequential Monte Carlo methods to extend the 'nimble' modeling
+    package. Includes five particle filtering algorithms for use with state space
+    models: "Auxiliary", "Bootstrap", "Ensemble Kalman filter", "Iterated Filtering
+    2", and "Liu-West". See the paper "Sequential Monte Carlo Methods in the
+    nimble R Package" (Michaud et al. 2020) for more details. A full User Manual is
+    available at <https://r-nimble.org>.
 Version: 0.0.1
-Date: 2020-05-15
+Date: 2020-10-07
 Maintainer: Benjamin R. Goldstein <ben.goldstein@berkeley.edu>
-Authors@R: c(person("Nick", "Michaud", role = c("aut")),
+Authors@R: c(person("Nick", "Michaud", role = "aut"),
+              person("Perry", "de Valpine", role = "aut"),
               person("Christopher", "Paciorek", role = "aut"),
               person("Daniel", "Turek", role = "aut"),
               person("Benjamin R.", "Goldstein", role = c("aut", "cre"), 
                       email = "ben.goldstein@berkeley.edu"),
-              person("Perry", "de Valpine", role = "aut"))
+              person("Dao", "Nguyen", role = "ctb", comment = "contributions to the IF2 code"))
 License: BSD_3_clause + file LICENSE | GPL (>= 2)
-Depends: R (>= 3.1.2), nimble, devtools
-Suggests: testthat
+Copyright: See COPYRIGHTS file.
+Depends:
+    R (>= 3.1.2),
+    nimble
+Imports:
+    methods
+Suggests:
+    testthat
 Encoding: UTF-8
 LazyData: true
-URL: https://github.com/nimble-dev/nimbleSMC
+URL: https://r-nimble.org, https://github.com/nimble-dev/nimbleSMC
 Collate:
-  AuxilliaryFilter.R
-  BootstrapFilter.R
-  EnKFilter.R
-  IF2Filter.R
-  LiuWestFilter.R
-  MCMCSamplers.R
-  resamplers.R
-  utils.R
-  zzz.R
-RoxygenNote: 7.1.0
+    AuxiliaryFilter.R
+    BootstrapFilter.R
+    EnKFilter.R
+    IF2Filter.R
+    LiuWestFilter.R
+    MCMCSamplers.R
+    resamplers.R
+    utils.R
+    zzz.R
+RoxygenNote: 5.0.1

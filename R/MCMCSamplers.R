@@ -53,8 +53,6 @@
 #' 
 #' 
 
-testNF <- nimbleFunction
-
 
 #######################################################################################
 ### RW_PF, does a univariate RW, but using a particle filter likelihood function ######
@@ -294,7 +292,7 @@ sampler_RW_PF_block <- nimbleFunction(
     ## nested function and function list definitions
     my_setAndCalculate <- setAndCalculate(model, target)
     my_decideAndJump <- decideAndJump(model, mvSaved, target, calcNodes)
-    my_calcAdaptationFactor <- nimble:::calcAdaptationFactor(d, adaptFactorExponent)
+    my_calcAdaptationFactor <- calcAdaptationFactor(d, adaptFactorExponent)
     if(!is.null(existingPF)) {
       my_particleFilter <- existingPF
     } else {

@@ -29,7 +29,7 @@ bootFStep <- nimbleFunction(
                    resamplingMethod,
                    silent = FALSE) {
     notFirst <- iNode != 1
-    modelSteps <- nimbleSMC:::particleFilter_splitModelSteps(model, nodes, iNode, notFirst)
+    modelSteps <- particleFilter_splitModelSteps(model, nodes, iNode, notFirst)
     prevDeterm <- modelSteps$prevDeterm
     calc_thisNode_self <- modelSteps$calc_thisNode_self
     calc_thisNode_deps <- modelSteps$calc_thisNode_deps
@@ -62,19 +62,19 @@ bootFStep <- nimbleFunction(
     }
     isLast <- (iNode == length(nodes))
     ess <- 0
-    resamplerFunctionList <- nimble:::nimbleFunctionList(nimbleSMC:::resamplerVirtual)
+    resamplerFunctionList <- nimbleFunctionList(resamplerVirtual)
     if(resamplingMethod == 'default'){
-      resamplerFunctionList[[1]] <- nimbleSMC:::residualResampleFunction()
+      resamplerFunctionList[[1]] <- residualResampleFunction()
       defaultResamplerFlag <- TRUE
     }
     if(resamplingMethod == 'residual')
-      resamplerFunctionList[[1]] <- nimbleSMC:::residualResampleFunction()
+      resamplerFunctionList[[1]] <- residualResampleFunction()
     if(resamplingMethod == 'multinomial')
-      resamplerFunctionList[[1]] <- nimbleSMC:::multinomialResampleFunction()
+      resamplerFunctionList[[1]] <- multinomialResampleFunction()
     if(resamplingMethod == 'stratified')
-      resamplerFunctionList[[1]] <- nimbleSMC:::stratifiedResampleFunction()
+      resamplerFunctionList[[1]] <- stratifiedResampleFunction()
     if(resamplingMethod == 'systematic')
-      resamplerFunctionList[[1]] <- nimbleSMC:::systematicResampleFunction()
+      resamplerFunctionList[[1]] <- systematicResampleFunction()
   },
   run = function(m = integer(),
                  threshNum = double(),
@@ -264,7 +264,7 @@ buildBootstrapFilter <- nimbleFunction(
                                  'residual')))
       stop('buildBootstrapFilter: "resamplingMethod" must be one of: "default", "multinomial", "systematic", "stratified", or "residual". ')
     ## latent state info
-    nodes <- nimbleSMC:::findLatentNodes(model, nodes, timeIndex)  
+    nodes <- findLatentNodes(model, nodes, timeIndex)  
     dims <- lapply(nodes, function(n) nimDim(model[[n]]))
     if(length(unique(dims)) > 1)
       stop('buildBootstrapFilter: sizes or dimensions of latent states varies.')
@@ -319,9 +319,9 @@ buildBootstrapFilter <- nimbleFunction(
       names <- names[1]
     }
     
-    bootStepFunctions <- nimble:::nimbleFunctionList(nimbleSMC:::bootStepVirtual)
+    bootStepFunctions <- nimbleFunctionList(bootStepVirtual)
     for(iNode in seq_along(nodes)){
-      bootStepFunctions[[iNode]] <- nimbleSMC:::bootFStep(model, mvEWSamples, mvWSamples,
+      bootStepFunctions[[iNode]] <- bootFStep(model, mvEWSamples, mvWSamples,
                                               nodes, iNode, names, saveAll,
                                               smoothing, resamplingMethod,
                                               silent) 
