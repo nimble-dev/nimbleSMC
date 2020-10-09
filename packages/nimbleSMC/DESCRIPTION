@@ -11,7 +11,7 @@ Date: 2020-10-07
 Maintainer: Christopher Paciorek <paciorek@stat.berkeley.edu>
 Authors@R: c(person("Nick", "Michaud", role = "aut"),
               person("Perry", "de Valpine", role = "aut"),
-              person("Christopher", "Paciorek", role = c("aut", "cre")),
+              person("Christopher", "Paciorek", email = "paciorek@stat.berkeley.edu", role = c("aut", "cre")),
               person("Daniel", "Turek", role = "aut"),
               person("Benjamin R.", "Goldstein", role = c("ctb"), comment = "packaging contributions"),
               person("Dao", "Nguyen", role = "ctb", comment = "contributions to the IF2 code"))
