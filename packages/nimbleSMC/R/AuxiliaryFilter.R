@@ -282,7 +282,7 @@ auxFStep <- nimbleFunction(
 #' @references Pitt, M.K., and Shephard, N. (1999). Filtering via simulation: Auxiliary particle filters. \emph{Journal of the American Statistical Association} 94(446): 590-599.
 #'   
 #' @examples
-#' \dontrun{
+#' \donttest{
 #' model <- nimbleModel(code = ...)
 #' my_AuxF <- buildAuxiliaryFilter(model, 'x[1:100]',
 #'    control = list(saveAll = TRUE, lookahead = 'mean'))

@@ -219,7 +219,7 @@ IF2Step <- nimbleFunction(
 #' @references Ionides, E.L., D. Nguyen, Y. Atchad{\'e}, S. Stoev, and A.A. King (2015). Inference for dynamic and latent variable models via iterated, perturbed Bayes maps. \emph{Proceedings of the National Academy of Sciences}, 112(3), 719-724.
 #' 
 #' @examples
-#' \dontrun{
+#' \donttest{
 #' model <- nimbleModel(code = ...)
 #' my_IF2 <- buildIteratedFilter2(model, 'x[1:100]', params = 'sigma_x')
 #' Cmodel <- compileNimble(model)
@@ -274,10 +274,10 @@ buildIteratedFilter2 <- nimbleFunction(
         if(!is.null(baselineNode)) {
             if(any(baselineNode %in% params)) {
                 params <- params[!params %in% baselineNode]
-                cat("buildIteratedFilter2: removing baselineNode from parameters.\n")
+                message("buildIteratedFilter2: removing baselineNode from parameters.\n")
             }
         }
-        cat("buildIteratedFilter2: IF2 algorithm built to maximize parameters: ", paste(params, collapse = ', '), ".\n", sep = '')
+        message("buildIteratedFilter2: IF2 algorithm built to maximize parameters: ", paste(params, collapse = ', '), ".\n", sep = '')
         
         if(is.null(sigma)){
             sigma <- rep(1, numParams)

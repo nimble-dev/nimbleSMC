@@ -233,7 +233,7 @@ bootFStep <- nimbleFunction(
 #' @family particle filtering methods
 #' @references Gordon, N.J., D.J. Salmond, and A.F.M. Smith. (1993). Novel approach to nonlinear/non-Gaussian Bayesian state estimation. \emph{IEEE Proceedings F (Radar and Signal Processing)}. Vol. 140. No. 2. IET Digital Library, 1993.
 #' @examples
-#' \dontrun{
+#' \donttest{
 #' model <- nimbleModel(code = ...)
 #' my_BootF <- buildBootstrapFilter(model, 'x[1:100]', control = list(thresh  = 1))
 #' Cmodel <- compileNimble(model)

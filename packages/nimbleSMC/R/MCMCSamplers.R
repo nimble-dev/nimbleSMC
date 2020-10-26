@@ -75,10 +75,7 @@ sampler_RW_PF <- nimbleFunction(
     optimizeM      <- extractControlElement(control, 'pfOptimizeNparticles', FALSE)
     latents        <- extractControlElement(control, 'latents',              error = 'RW_PF sampler missing required control argument: latents')
     if('pfLookahead' %in% names(control)) {
-      print("Warning, the `pfLookahead` control list argument is deprecated
-                and will not be supported in future versions of NIMBLE. Please
-                specify the lookahead function via the pfControl argument 
-                instead.")
+      warning("The `pfLookahead` control list argument is deprecated and will not be supported in future versions of `nimbleSMC`. Please specify the lookahead function via the pfControl argument instead.")
       filterControl$lookahead <- control[['pfLookahead']]
     }
     else if(!('lookahead' %in% names(filterControl))) {
@@ -248,10 +245,7 @@ sampler_RW_PF_block <- nimbleFunction(
     optimizeM           <- extractControlElement(control, 'pfOptimizeNparticles', FALSE)
     latents             <- extractControlElement(control, 'latents',              error = 'RW_PF sampler missing required control argument: latents')
     if('pfLookahead' %in% names(control)) {
-      print("Warning, the `pfLookahead` control list argument is deprecated
-                and will not be supported in future versions of NIMBLE. Please
-                specify the lookahead function via the pfControl argument 
-                instead.")
+      warning("The `pfLookahead` control list argument is deprecated and will not be supported in future versions of `nimbleSMC`. Please specify the lookahead function via the pfControl argument instead.")
       filterControl$lookahead <- control[['pfLookahead']]
     }
     else if(!('lookahead' %in% names(filterControl))) {

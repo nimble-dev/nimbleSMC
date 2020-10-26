@@ -384,7 +384,7 @@ LWparFunc <- nimbleFunction(
 #' @references Liu, J., and M. West. (2001). Combined parameter and state estimation in simulation-based filtering. \emph{Sequential Monte Carlo methods in practice}. Springer New York, pages 197-223.
 #' 
 #' @examples
-#' \dontrun{
+#' \donttest{
 #' model <- nimbleModel(code = ...)
 #' my_LWF <- buildLiuWestFilter(model, 'x[1:100]', params = 'sigma_x')
 #' Cmodel <- compileNimble(model)

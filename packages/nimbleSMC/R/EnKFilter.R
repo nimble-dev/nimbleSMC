@@ -235,7 +235,7 @@ ENKFStep <- nimbleFunction(
 #' @family filtering methods
 #' @references Houtekamer, P.L., and H.L. Mitchell. (1998). Data assimilation using an ensemble Kalman filter technique. \emph{Monthly Weather Review}, 126(3), 796-811.
 #' @examples
-#' \dontrun{
+#' \donttest{
 #' model <- nimbleModel(code = ...)
 #' my_ENKFF <- buildEnsembleKF(model, 'x')
 #' Cmodel <- compileNimble(model)
