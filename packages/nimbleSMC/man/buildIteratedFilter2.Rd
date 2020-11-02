@@ -76,7 +76,7 @@ exampleCode <- nimbleCode({
   x[1] ~ dnorm(.8 * x0, var = 1)
   y[1] ~ dnorm(x[1], var = .5)
   for(t in 2:10){
-    x[t] ~ dnorm(.8 * x[t-1], var = sigma_x)
+    x[t] ~ dnorm(.8 * x[t-1], sd = sigma_x)
     y[t] ~ dnorm(x[t], var = .5)
   }
   sigma_x ~ dunif(0, 10)
