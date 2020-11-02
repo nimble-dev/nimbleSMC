@@ -384,17 +384,28 @@ LWparFunc <- nimbleFunction(
 #' @references Liu, J., and M. West. (2001). Combined parameter and state estimation in simulation-based filtering. \emph{Sequential Monte Carlo methods in practice}. Springer New York, pages 197-223.
 #' 
 #' @examples
-#' \donttest{
-#' model <- nimbleModel(code = ...)
-#' my_LWF <- buildLiuWestFilter(model, 'x[1:100]', params = 'sigma_x')
-#' Cmodel <- compileNimble(model)
-#' Cmy_LWF <- compileNimble(my_LWF, project = model)
-#' Cmy_LWF$run(100000)
-#' lw_X <- as.matrix(Cmy_LWF$mvEWSamples, 'x')
-#' 
-#' #  samples from posterior of a top level parameter named sigma_x:
-#' lw_sigma_x <- as.matrix(Cmy_LWF$mvEWSamples, 'sigma_x')
-#' }
+#' ## For illustration only.
+#' exampleCode <- nimbleCode({
+#'   x0 ~ dnorm(0, var = 1)
+#'   x[1] ~ dnorm(.8 * x0, var = 1)
+#'   y[1] ~ dnorm(x[1], var = .5)
+#'   for(t in 2:10){
+#'     x[t] ~ dnorm(.8 * x[t-1], sd = sigma_x)
+#'     y[t] ~ dnorm(x[t], var = .5)
+#'   }
+#'   sigma_x ~ dunif(0, 10)
+#' })
+#'
+#' model <- nimbleModel(code = exampleCode, data = list(y = rnorm(10)),
+#'                      inits = list(x0 = 0, x = rnorm(10), sigma_x = 1))
+#' my_LWF <- buildLiuWestFilter(model, 'x', params = 'sigma_x')
+#' ## Now compile and run, e.g.,
+#' ## Cmodel <- compileNimble(model)
+#' ## Cmy_LWF <- compileNimble(my_LWF, project = model)
+#' ## Cmy_LWF$run(m = 1000)
+#' ## lw_X <- as.matrix(Cmy_LWF$mvEWSamples, 'x')
+#' ##  samples from posterior of top level parameter
+#' ## lw_sigma_x <- as.matrix(Cmy_LWF$mvEWSamples, 'sigma_x')
 buildLiuWestFilter <- nimbleFunction(
     name = 'buildLiuWestFilter',
   setup = function(model, nodes, params = NULL, control = list()){

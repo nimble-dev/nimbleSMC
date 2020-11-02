@@ -57,16 +57,27 @@ propagation.
  sample size) values, one value for each time point.
 }
 \examples{
-\dontrun{
-model <- nimbleModel(code = ...)
-my_AuxF <- buildAuxiliaryFilter(model, 'x[1:100]',
-   control = list(saveAll = TRUE, lookahead = 'mean'))
-Cmodel <- compileNimble(model)
-Cmy_AuxF <- compileNimble(my_AuxF, project = model)
-logLike <- Cmy_AuxF$run(m = 100000)
-ESS <- Cmy_AuxF$returnESS(m = 100000)
-hist(as.matrix(Cmy_Auxf$mvEWSamples, 'x'))
-}
+## For illustration only.
+exampleCode <- nimbleCode({
+  x0 ~ dnorm(0, var = 1)
+  x[1] ~ dnorm(.8 * x0, var = 1)
+  y[1] ~ dnorm(x[1], var = .5)
+  for(t in 2:10){
+    x[t] ~ dnorm(.8 * x[t-1], var = 1)
+    y[t] ~ dnorm(x[t], var = .5)
+  }
+})
+
+model <- nimbleModel(code = exampleCode, data = list(y = rnorm(10)),
+                     inits = list(x0 = 0, x = rnorm(10)))
+my_AuxF <- buildAuxiliaryFilter(model, 'x',
+                control = list(saveAll = TRUE, lookahead = 'mean'))
+## Now compile and run, e.g.,
+## Cmodel <- compileNimble(model)
+## Cmy_AuxF <- compileNimble(my_AuxF, project = model)
+## logLik <- Cmy_AuxF$run(m = 1000)
+## ESS <- Cmy_AuxF$returnESS()
+## aux__X <- as.matrix(Cmy_AuxF$mvEWSamples, 'x')
 }
 \author{
 Nicholas Michaud

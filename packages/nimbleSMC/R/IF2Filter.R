@@ -219,18 +219,30 @@ IF2Step <- nimbleFunction(
 #' @references Ionides, E.L., D. Nguyen, Y. Atchad{\'e}, S. Stoev, and A.A. King (2015). Inference for dynamic and latent variable models via iterated, perturbed Bayes maps. \emph{Proceedings of the National Academy of Sciences}, 112(3), 719-724.
 #' 
 #' @examples
-#' \donttest{
-#' model <- nimbleModel(code = ...)
-#' my_IF2 <- buildIteratedFilter2(model, 'x[1:100]', params = 'sigma_x')
-#' Cmodel <- compileNimble(model)
-#' Cmy_IF2 <- compileNimble(my_IF2, project = model)
-#' # MLE estimate of a top level parameter named sigma_x:
-#' sigma_x_MLE <- Cmy_IF2$run(m = 10000, n = 10)
-#' # Continue running algorithm for more precise estimate:
-#' sigma_x_MLE <- Cmy_IF2$continueRun(n = 10)
-#' # visualize progression of the estimated log-likelihood
-#' ts.plot(CmyIF2$logLik)
-#' }
+#' ## For illustration only.
+#' exampleCode <- nimbleCode({
+#'   x0 ~ dnorm(0, var = 1)
+#'   x[1] ~ dnorm(.8 * x0, var = 1)
+#'   y[1] ~ dnorm(x[1], var = .5)
+#'   for(t in 2:10){
+#'     x[t] ~ dnorm(.8 * x[t-1], var = sigma_x)
+#'     y[t] ~ dnorm(x[t], var = .5)
+#'   }
+#'   sigma_x ~ dunif(0, 10)
+#' })
+#'
+#' model <- nimbleModel(code = exampleCode, data = list(y = rnorm(10)),
+#'                      inits = list(x0 = 0, x = rnorm(10), sigma_x = 1))
+#' my_IF2 <- buildIteratedFilter2(model, 'x', params = 'sigma_x')
+#' ## Now compile and run, e.g.,
+#' ## Cmodel <- compileNimble(model)
+#' ## Cmy_IF2 <- compileNimble(my_IF2, project = model)
+#' ## MLE estimate of a top level parameter named sigma_x:
+#' ## sigma_x_MLE <- Cmy_IF2$run(m = 10000, n = 10)
+#' ## Continue running algorithm for more precise estimate:
+#' ## sigma_x_MLE <- Cmy_IF2$continueRun(n = 10)
+#' ## visualize progression of the estimated log-likelihood
+#' ## ts.plot(CmyIF2$logLik)
 buildIteratedFilter2 <- nimbleFunction(
     setup = function(model, nodes, params = NULL, baselineNode = NULL, control = list()){
         

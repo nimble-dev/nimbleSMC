@@ -233,18 +233,31 @@ ENKFStep <- nimbleFunction(
 #' The transition from x[t] to x[t+1] does not have to be normal or linear.  Output from the posterior distribution of the latent
 #' states is stored in \code{mvSamples}.
 #' @family filtering methods
+#'
+#' @export
+#' 
 #' @references Houtekamer, P.L., and H.L. Mitchell. (1998). Data assimilation using an ensemble Kalman filter technique. \emph{Monthly Weather Review}, 126(3), 796-811.
 #' @examples
-#' \donttest{
-#' model <- nimbleModel(code = ...)
-#' my_ENKFF <- buildEnsembleKF(model, 'x')
-#' Cmodel <- compileNimble(model)
-#' Cmy_ENKF <- compileNimble(my_ENKF, project = model)
-#' Cmy_ENKF$run(m = 100000)
-#' ENKF_X <- as.matrix(Cmy_ENKF$mvSamples, 'x')
-#' hist(ENKF_X)
-#' }
-#' @export
+#' ## For illustration only.
+#' exampleCode <- nimbleCode({
+#'   x0 ~ dnorm(0, var = 1)
+#'   x[1] ~ dnorm(.8 * x0, var = 1)
+#'   y[1] ~ dnorm(x[1], var = .5)
+#'   for(t in 2:10){
+#'     x[t] ~ dnorm(.8 * x[t-1], var = 1)
+#'     y[t] ~ dnorm(x[t], var = .5)
+#'   }
+#' })
+#'
+#' model <- nimbleModel(code = exampleCode, data = list(y = rnorm(10)),
+#'                      inits = list(x0 = 0, x = rnorm(10)))
+#' my_enKF <- buildEnsembleKF(model, 'x',
+#'                 control = list(saveAll = TRUE, thresh = 1))
+#' ## Now compile and run, e.g.,
+#' ## Cmodel <- compileNimble(model)
+#' ## Cmy_enKF <- compileNimble(my_enKF, project = model)
+#' ## Cmy_enKF$run(m = 1000)
+#' ## enKF_X <- as.matrix(Cmy_enKF$mvSamples, 'x')
 buildEnsembleKF <- nimbleFunction(
     name = 'buildEnsembleKF',
   setup = function(model, nodes, control = list()) {

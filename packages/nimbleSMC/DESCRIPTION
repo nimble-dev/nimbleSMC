@@ -11,7 +11,8 @@ Authors@R: c(person("Nick", "Michaud", role = "aut"),
               person("Christopher", "Paciorek", email = "paciorek@stat.berkeley.edu", role = c("aut", "cre")),
               person("Daniel", "Turek", role = "aut"),
               person("Benjamin R.", "Goldstein", role = c("ctb"), comment = "packaging contributions"),
-              person("Dao", "Nguyen", role = "ctb", comment = "contributions to the IF2 code"))
+              person("Dao", "Nguyen", role = "ctb", comment = "contributions to the IF2 code"),
+              person("The Regents of the", "University of California", role = "cph"))
 License: BSD_3_clause + file LICENSE | GPL (>= 2)
 Copyright: See COPYRIGHTS file.
 Depends:

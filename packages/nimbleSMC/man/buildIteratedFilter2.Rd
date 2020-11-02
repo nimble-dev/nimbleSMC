@@ -70,18 +70,30 @@ While NIMBLE's IF2 algorithm requires prior distributions on the parameters, the
 The IF2 algorithm stores the estimated MLEs, one from each iteration, in \code{estimates}. It also stores standard deviation of the particles from each iteration, one per parameter, in \code{estSD}. Finally it stores the estimated log-likelihood at the estimated MLE from each iteration in \code{logLik}.
 }
 \examples{
-\dontrun{
-model <- nimbleModel(code = ...)
-my_IF2 <- buildIteratedFilter2(model, 'x[1:100]', params = 'sigma_x')
-Cmodel <- compileNimble(model)
-Cmy_IF2 <- compileNimble(my_IF2, project = model)
-# MLE estimate of a top level parameter named sigma_x:
-sigma_x_MLE <- Cmy_IF2$run(m = 10000, n = 10)
-# Continue running algorithm for more precise estimate:
-sigma_x_MLE <- Cmy_IF2$continueRun(n = 10)
-# visualize progression of the estimated log-likelihood
-ts.plot(CmyIF2$logLik)
-}
+## For illustration only.
+exampleCode <- nimbleCode({
+  x0 ~ dnorm(0, var = 1)
+  x[1] ~ dnorm(.8 * x0, var = 1)
+  y[1] ~ dnorm(x[1], var = .5)
+  for(t in 2:10){
+    x[t] ~ dnorm(.8 * x[t-1], var = sigma_x)
+    y[t] ~ dnorm(x[t], var = .5)
+  }
+  sigma_x ~ dunif(0, 10)
+})
+
+model <- nimbleModel(code = exampleCode, data = list(y = rnorm(10)),
+                     inits = list(x0 = 0, x = rnorm(10), sigma_x = 1))
+my_IF2 <- buildIteratedFilter2(model, 'x', params = 'sigma_x')
+## Now compile and run, e.g.,
+## Cmodel <- compileNimble(model)
+## Cmy_IF2 <- compileNimble(my_IF2, project = model)
+## MLE estimate of a top level parameter named sigma_x:
+## sigma_x_MLE <- Cmy_IF2$run(m = 10000, n = 10)
+## Continue running algorithm for more precise estimate:
+## sigma_x_MLE <- Cmy_IF2$continueRun(n = 10)
+## visualize progression of the estimated log-likelihood
+## ts.plot(CmyIF2$logLik)
 }
 \author{
 Nicholas Michaud, Dao Nguyen, and Christopher Paciorek
