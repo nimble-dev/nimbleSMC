@@ -19,6 +19,7 @@ notifications:
     on_failure: change
 
 install:
+  - ./install_requirements.R
   - R CMD build packages/nimbleSMC
   - R CMD INSTALL packages/nimbleSMC
 
