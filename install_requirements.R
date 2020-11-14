@@ -11,7 +11,7 @@ requirements <- c(
 for (package in requirements) {
     if (!suppressPackageStartupMessages(require(package,
                                                 character.only = TRUE))) {
-        install.packages(package, repos = 'https://cran.us.r-project.org')
+        install.packages(package, repos = 'https://cloud.r-project.org/')
     }
 }
 
