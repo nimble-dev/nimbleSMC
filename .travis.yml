@@ -4,6 +4,9 @@ language: R
 r:
   - 4.0
 
+dist: bionic
+sudo: false
+
 os:
   - linux
   - osx
@@ -14,7 +17,7 @@ cache:
 notifications:
   email:
     recipients:
-      - ben.goldstein@berkeley.edu
+      - paciorek@berkeley.edu
     on_success: change
     on_failure: change
 
@@ -23,3 +26,8 @@ script:
   - R CMD check *tar.gz --as-cran
   - R CMD INSTALL *tar.gz --install-tests
   - Rscript ./run_tests.R
+
+branches:
+  only:
+    - master
+    - devel
