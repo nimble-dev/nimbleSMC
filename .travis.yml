@@ -18,14 +18,9 @@ notifications:
     on_success: change
     on_failure: change
 
-install:
-#  - ./install_requirements.R
-  - R CMD build packages/nimbleSMC
-  - R CMD INSTALL packages/nimbleSMC
-
-
 script:
-#  - R CMD build .
-#  - R CMD check *tar.gz --as-cran
-#  - R CMD INSTALL *tar.gz --install-tests
+  - R CMD build packages/nimbleSMC
+  - R CMD check *tar.gz --as-cran
+  - R CMD INSTALL *tar.gz --install-tests
   - Rscript ./run_tests.R
+
