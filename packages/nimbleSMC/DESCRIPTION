@@ -1,8 +1,9 @@
 Package: nimbleSMC
 Title: Sequential Monte Carlo Methods for 'nimble'
 Description: Includes five particle filtering algorithms for use with state space
-    models in the 'nimble' system: 'Auxiliary;, 'Bootstrap', 'Ensemble Kalman filter', 'Iterated Filtering
-    2', and 'Liu-West'. A full User Manual is available at <https://r-nimble.org>.
+    models in the 'nimble' system: 'Auxiliary', 'Bootstrap', 'Ensemble Kalman filter',
+    'Iterated Filtering 2', and 'Liu-West'. A full User Manual is available at
+    <https://r-nimble.org>.
 Version: 0.10.0
 Date: 2020-11-02
 Maintainer: Christopher Paciorek <paciorek@stat.berkeley.edu>
@@ -10,14 +11,14 @@ Authors@R: c(person("Nick", "Michaud", role = "aut"),
               person("Perry", "de Valpine", role = "aut"),
               person("Christopher", "Paciorek", email = "paciorek@stat.berkeley.edu", role = c("aut", "cre")),
               person("Daniel", "Turek", role = "aut"),
-              person("Benjamin R.", "Goldstein", role = c("ctb"), comment = "packaging contributions"),
+              person("Benjamin R.", "Goldstein", role = "ctb", comment = "packaging contributions"),
               person("Dao", "Nguyen", role = "ctb", comment = "contributions to the IF2 code"),
               person("The Regents of the", "University of California", role = "cph"))
 License: BSD_3_clause + file LICENSE | GPL (>= 2)
 Copyright: See COPYRIGHTS file.
 Depends:
     R (>= 3.1.2),
-    nimble
+    nimble (>= 0.10.0)
 Imports:
     methods
 Suggests:
