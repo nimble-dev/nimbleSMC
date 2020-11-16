@@ -66,7 +66,7 @@ runTest <- function(test, logToFile = FALSE, runViaTestthat = TRUE) {
                          'library(testthat);',
                          'library(nimble);',
                          'library(nimbleSMC);',
-                         'tryCatch(test_package("nimbleSMC", "^', name, '$",',
+                         'tryCatch(test_package("packages/nimbleSMC/tests/testthat", "^', name, '$",',
                          '                      reporter = ', reporter, '),',
                          '  error = function(e) quit(status = 1))')
         command <- c(runner, '-e', custom_shQuote(script))
