@@ -1,6 +1,7 @@
 #!/usr/bin/env Rscript
 
 requirements <- c(
+    'sys',
     'igraph',
     'coda',
     'testthat',
