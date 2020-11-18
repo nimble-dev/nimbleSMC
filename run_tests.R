@@ -27,7 +27,7 @@ if (length(grep('^-', argv, invert = TRUE))) {
     allTests <- paste0('test-', argv[!grepl('^-', argv)], '.R')
 } else {
     # Run a default set of tests.
-    allTests <- list.files('tests/testthat')
+    allTests <- list.files('packages/nimbleSMC/tests/testthat')
     allTests <- allTests[grepl('test-.*\\.R', allTests)]
 }
 
@@ -64,15 +64,14 @@ runTest <- function(test, logToFile = FALSE, runViaTestthat = TRUE) {
         name <- gsub('test-(.*)\\.R', '\\1', test)
         script <- paste0('library(methods);',
                          'library(testthat);',
-                         'devtools::install_github("nimble-dev/nimble/packages/nimble", ref = "noSMC");',
                          'library(nimble);',
                          'library(nimbleSMC);',
-                         'tryCatch(test_package("nimbleSMC", "^', name, '$",',
+                         'tryCatch(test_dir("packages/nimbleSMC/tests/testthat", "^', name, '$",',
                          '                      reporter = ', reporter, '),',
                          '  error = function(e) quit(status = 1))')
         command <- c(runner, '-e', custom_shQuote(script))
     } else {
-        command <- c(runner, file.path('packages', 'nimble', 'inst', 'tests', test))
+        command <- c(runner, file.path('packages', 'nimbleSMC', 'testthat', 'tests', test))
     }
     Sys.setenv(MAKEFLAGS = '-j1')  # Work around broken job pipe when GNU make is run under mclapply.
     if (logToFile) {
