@@ -10,7 +10,12 @@
 ENKFStepVirtual <- nimbleFunctionVirtual(
   run = function(m = integer()){ 
     returnType()
-  }
+  },
+  methods = list(
+    setSample = function(x = double(2)){
+      returnType()
+    }
+  )
 )
 
 ENKFFuncVirtual <- nimbleFunctionVirtual(
@@ -196,7 +201,18 @@ ENKFStep <- nimbleFunction(
         copy(model, mvSamples, thisNode, thisXSName, rowTo = i)      
       }
     }
-  }
+  },
+  methods = list(
+    setSample = function(x = double(2)) {
+      m <- dim(x)[1]
+      currentValues <- values(model, thisNode)
+      for(i in 1:m) {
+        values(model, thisNode) <<- x[i,]
+        copy(model, mvSamples, thisNode, thisXSName, rowTo = i)
+      }
+      values(model, thisNode) <<- currentValues
+    }
+  )
 )
 
 #' Create an Ensemble Kalman filter algorithm to sample from latent states.
@@ -325,11 +341,22 @@ buildEnsembleKF <- nimbleFunction(
                                              iNode, xDim, yDim[[iNode]], saveAll, names, silent) 
     }
   },
-  run = function(m = integer(default = 100)) {
-    if(initModel == TRUE) my_initializeModel$run()
+  run = function(m = integer(default = 100),
+                 init = logical(default = TRUE),
+                 skipFirst = integer(default = 0)) { 
+    if(init) my_initializeModel$run()
     resize(mvSamples, m) 
-    for(iNode in seq_along(ENKFStepFunctions)) { 
-      ENKFStepFunctions[[iNode]]$run(m)
+    for(iNode in seq_along(ENKFStepFunctions)) {
+      if(!(iNode == 1 & skipFirst))
+        ENKFStepFunctions[[iNode]]$run(m)
     }
-  }
+  },
+  methods = list(
+    setFirstSample = function(x = double(2)) {
+      m <- dim(x)[1]
+      resize(mvSamples, m)
+      iNode <- 1
+      ENKFStepFunctions[[iNode]]$setSample(x)
+    }
+  )
 )
