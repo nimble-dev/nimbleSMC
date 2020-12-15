@@ -83,7 +83,7 @@ ENKFStep <- nimbleFunction(
     thisDeterm <- model$getDependencies(thisNode, determOnly = TRUE)
     thisData   <- model$getDependencies(thisNode, dataOnly = TRUE)
     t <- iNode  # current time point
-    yObs <- c(sapply(thisData, function(x) model[[x]])) #all dependent data for this time point
+    yObs <- if(length(thisData) > 0) c(sapply(thisData, function(x) model[[x]])) else 0
     # Get names of xs node for current and previous time point (used in copy)
     if(saveAll == 1){
       prevXSName <- prevNode    
@@ -97,10 +97,10 @@ ENKFStep <- nimbleFunction(
       currInd <- 1
       prevInd <- 1
     }
-    yLength <- sum(yDim)  #total number of dependent data points for this time point
+    yLength <- if(is.na(yDim)) 0 else sum(yDim)  #total number of dependent data points for this time point
     meanVec <- rep(0, yLength)
     
-    if(yLength==1){
+    if(yLength <= 1){
       yObs<-c(yObs,0)
       meanVec <- c(0,0)
     }
@@ -108,22 +108,35 @@ ENKFStep <- nimbleFunction(
     ## indices for locations of data from different nodes within our yf vector
     ## e.g. if there were two y nodes depending on x[t], with the first being a vector of length 2, and the second being 
     ## a scalar , yInds would be (0, 2, 3)  - the first node would go in yf[1:2] and the second node in yf[3] 
-    yInds <- c(0,cumsum(yDim)) 
+    yInds <- if(yLength == 0) c(0, 0) else c(0,cumsum(yDim)) 
     # 0 vector
-    nNodes <- length(yDim)
+    nNodes <- if(yLength == 0) 0 else length(yDim)
     #determine whether each data node is multivariate or scalar and assign correct function
-    ENKFFuncList <- nimbleFunctionList(ENKFFuncVirtual) 
-    for(yNode in 1:length(yDim)){
-      if(yDim[yNode] > 1){
-        ENKFFuncList[[yNode]] <- enkfMultFunc(model, thisData[yNode])
-      }
-      else{
-        ENKFFuncList[[yNode]] <- enkfScalFunc(model, thisData[yNode])
-      } 
+    ENKFFuncList <- nimbleFunctionList(ENKFFuncVirtual)
+    if(yLength > 0) {
+        for(yNode in seq_along(yDim)){
+            if(yDim[yNode] > 1){
+                ENKFFuncList[[yNode]] <- enkfMultFunc(model, thisData[yNode])
+            }
+            else{
+                ENKFFuncList[[yNode]] <- enkfScalFunc(model, thisData[yNode])
+            } 
+        }
     }
   },
   run = function(m = integer()) {
-    #declare(xf, double(2, c(xDim, m))) 
+      if(yLength == 0) {
+          for(i in 1:m) {
+              if(notFirst) {
+                  copy(from = mvSamples, to = model, nodes = prevXSName, nodesTo = prevNode, row = i)          
+                  calculate(model, prevDeterm) 
+              }
+              simulate(model, thisNode)
+              copy(model, mvSamples, thisNode, thisXSName, rowTo = i)      
+          }
+          return()
+      }
+      #declare(xf, double(2, c(xDim, m))) 
       xf <- matrix(nrow = xDim, ncol = m, init=FALSE)
       ##declare(yf, double(2, c(yLength, m)))
       yf <- matrix(nrow = yLength, ncol = m, init=FALSE)
@@ -297,9 +310,11 @@ buildEnsembleKF <- nimbleFunction(
     #  y[1,1] ~ dnorm(x[1], 1)
     #  y[1,2] ~ dnorm(5*pow(x[1],2),1)
     #  where multiple separately specified y nodes depend on the same x node(s)
-    yNodes <- lapply(nodes, function(n) model$getDependencies(n, dataOnly = TRUE))  
-    yDim <- unlist(sapply(yNodes, function(x){unname(sapply(x, function(z) nimDim(model[[z]])))})) #dimensions of each dependent y node
-    
+    yNodes <- lapply(nodes, function(n) model$getDependencies(n, dataOnly = TRUE))
+    hasDataDependencies <- sapply(yNodes, function(x) length(x) > 0)
+    ##yDim <- unlist(sapply(yNodes, function(x){unname(sapply(x, function(z) nimDim(model[[z]])))})) #dimensions of each dependent y node
+    yDim <- mapply(function(hasDataDep, ys) if(hasDataDep) unname(sapply(ys, function(z) nimDim(model[[z]]))) else NA, hasDataDependencies, yNodes, SIMPLIFY = FALSE)
+      
     errors <- sapply(model$expandNodeNames(yNodes), function(node){tryCatch(getParam(model, node, 'mean'), error=function(a){return("error")})})
     if(any(errors == "error", na.rm=TRUE)) stop("cannot use ENKF for this model, cannot obtain mean of data nodes ")
     
