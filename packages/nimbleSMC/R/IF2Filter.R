@@ -138,23 +138,26 @@ IF2Step <- nimbleFunction(
             model$calculate(parAndPrevDeterm)
             model$simulate(calc_thisNode_self)
             logProb <- model$calculate(calc_thisNode_deps)
-            wts[i]  <- exp(logProb)
-            if(is.nan(wts[i])) wts[i] <- 0
+            wts[i]  <- logProb
+            if(is.nan(wts[i])) wts[i] <- -Inf
             logProb <- model$calculate(paramNodes)
             if(is.na(logProb) | logProb == -Inf)
-                wts[i] <- 0
+                wts[i] <- -Inf
             nimCopy(model, mvWSamples, nodes = thisNode, nodesTo = latentVar, rowTo = i)
             nimCopy(model, mvWSamples, nodes = paramNodes, rowTo = i)
-            mvWSamples['wts', i][1] <<- wts[i]
         }
-        lik <- mean(wts)
-        wts <- wts/(m*lik) ## = wts / sum(wts)
+        maxWt <- max(wts)
+        wts <- exp(wts - maxWt)
+        sumWts <- sum(exp(wts - maxWt))
+        logLik <- log(sum(wts)) + maxWt - log(m)
+        wts <- wts / sumWts
         rankSample(wts, m, ids, silent)
         for(i in 1:m){
+            mvWSamples['wts', i][1] <<- wts[i]
             copy(mvWSamples, mvEWSamples, nodes = latentVar, row = ids[i], rowTo = i)
             copy(mvWSamples, mvEWSamples, nodes = paramNodes, row = ids[i], rowTo = i)
         }
-        return(lik)
+        return(logLik)
     }
 )
 
@@ -407,7 +410,7 @@ buildIteratedFilter2 <- nimbleFunction(
             if(baseline)
                 IF2Step0Function$run(m, j, alpha)
             for(iNode in seq_along(IF2StepFunctions)) {
-                logLik[j] <<- logLik[j] + log(IF2StepFunctions[[iNode]]$run(m, j, alpha))
+                logLik[j] <<- logLik[j] + IF2StepFunctions[[iNode]]$run(m, j, alpha)
             }
             
             ## Compute estimate and sd of particles at each iteration for diagnostics.
@@ -456,7 +459,7 @@ buildIteratedFilter2 <- nimbleFunction(
                 if(baseline) 
                     IF2Step0Function$run(oldM, j, alpha)
                 for(iNode in seq_along(IF2StepFunctions)) {
-                    logLik[j] <<- logLik[j] + log(IF2StepFunctions[[iNode]]$run(oldM, j, alpha))
+                    logLik[j] <<- logLik[j] + IF2StepFunctions[[iNode]]$run(oldM, j, alpha)
                 }
                 ## Compute estimate and sd of particles at each iteration for diagnostics.
                 for(i in 1:oldM) {

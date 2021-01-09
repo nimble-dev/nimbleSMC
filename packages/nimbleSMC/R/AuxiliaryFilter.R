@@ -138,20 +138,19 @@ auxFStep <- nimbleFunction(
         if(lookahead == "mean"){
           for(j in 1:numLatentNodes)
               auxFuncList[[j]]$lookahead()
-        }
-        else
-          auxFuncList[[1]]$lookahead()
+        } else auxFuncList[[1]]$lookahead()
 
         ## Get p(y_t+1 | x_t+1).
         auxll[i] <- model$calculate(calc_thisNode_deps)
         if(is.nan(auxll[i])){
           return(-Inf)
         }
-        ## Multiply by weight from time t.
+        ## Multiply (on log scale) by weight from time t.
         auxWts[i] <- auxll[i] + mvWSamples['wts',i][prevInd] 
       }
-      ## Normalize weights and resample.
-      normAuxWts <- exp(auxWts)/sum(exp(auxWts))  
+      ## Normalize weights and resample, using log-sum-exp trick to avoid underflow.
+      maxWt <- max(auxWts)
+      normAuxWts <- exp(auxWts - maxWt)/sum(exp(auxWts - maxWt))  
       if(defaultResamplerFlag == TRUE){
         rankSample(normAuxWts, m, ids, silent)	 
       }
@@ -182,7 +181,9 @@ auxFStep <- nimbleFunction(
         wts[i] <- ll[i]  
       }
     }
-    normWts <- exp(wts)/sum(exp(wts))
+    ## Use log-sum-exp trick to avoid underflow.
+    maxWt <- max(wts)
+    normWts <- exp(wts - maxWt)/sum(exp(wts - maxWt))
     ess <<- 1/sum(normWts^2) 
     for(i in 1:m){
       ## Save weights for use in next timepoint's look-ahead step.
@@ -209,15 +210,17 @@ auxFStep <- nimbleFunction(
       }
     }
     
-    ##  Calculate likelihood p(y_t+1 | y_1:t) as in equation (3) of paper.
+    ## Calculate likelihood p(y_t+1 | y_1:t) as in equation (3) of paper.
+    ## Use log-sum-exp trick to avoid underflow.
     if(notFirst){
-      outLL <- sum(exp(wts))/m
-      outLL <- outLL*sum(exp(auxWts))
+      maxWt <- max(wts)
+      maxAuxWt <- max(auxWts)
+      outLL <- log(sum(exp(wts - maxWt))) + maxWt - log(m) + log(sum(exp(auxWts - maxAuxWt))) + maxAuxWt
+    } else {
+      maxWt <- max(wts)
+      outLL <- log(sum(exp(wts - maxWt))) + maxWt - log(m)
     }
-    else{
-      outLL <- sum(exp(wts))/m
-    }
-    return(log(outLL))
+    return(outLL)
   }, 
   methods = list(
     returnESS = function() {
@@ -302,7 +305,7 @@ auxFStep <- nimbleFunction(
 #' ## Cmy_AuxF <- compileNimble(my_AuxF, project = model)
 #' ## logLik <- Cmy_AuxF$run(m = 1000)
 #' ## ESS <- Cmy_AuxF$returnESS()
-#' ## aux__X <- as.matrix(Cmy_AuxF$mvEWSamples, 'x')
+#' ## aux_X <- as.matrix(Cmy_AuxF$mvEWSamples, 'x')
 buildAuxiliaryFilter <- nimbleFunction(
     name = 'buildAuxiliaryFilter',
     setup = function(model, nodes, control = list()) {

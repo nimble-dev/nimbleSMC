@@ -177,18 +177,12 @@ LWStep <- nimbleFunction(
   },
   run = function(m = integer()) {
     returnType(double())
-    ##declare(auxWts, double(1,m))
-    auxWts <- numeric(m, init=FALSE)
-    ##declare(l, double(1,m))
-    l <- numeric(m, init=FALSE)
-    ##declare(wts, double(1, m))
-    wts <- numeric(m, init=FALSE)
+    logAuxWts <- numeric(m, init=FALSE)
+    ll <- numeric(m, init=FALSE)
+    logWts <- numeric(m, init=FALSE)
     ids <- integer(m, 0)
-    ##declare(preWts, double(1,m))
-    preWts <- numeric(m, init=FALSE)
-    ##declare(tmpPars, double(2, c(numParams, m)))
+    logPreWts <- numeric(m, init=FALSE)
     tmpPars <- matrix(nrow = numParams, ncol = m, init=FALSE)
-    
     if(notFirst){
        for(j in 1:numParamVars){
          if(varSize[j] == 1){
@@ -198,10 +192,10 @@ LWStep <- nimbleFunction(
            tmpPars[(paramInds[j]+1):paramInds[j+1], ] <- doVarList[[j]]$vectorGet(1, m, varSize[j])
          }
        }
-      for(i in 1:m){
-        wts[i] <- exp(mvWSamples['wts',i][prevInd])
+       for(i in 1:m){
+         logWts[i] <- mvWSamples['wts',i][prevInd]
        }
-       meanVec <- parCalc$shrinkMean(m, wts, tmpPars )  # shrink parameter particles towards mean  
+       meanVec <- parCalc$shrinkMean(m, logWts, tmpPars )  # shrink parameter particles towards mean  
        for(i in 1:m) {
          copy(mvWSamples, model, prevXName, prevNode, row=i)
          values(model, paramNodes) <<- meanVec[,i]
@@ -210,15 +204,17 @@ LWStep <- nimbleFunction(
            setMeanList[[j]]$run()
          }
          calculate(model, calc_thisNode_self)
-         auxWts[i] <- exp(calculate(model, calc_thisNode_deps))
-         if(is.nan(auxWts[i])) auxWts[i] <- 0 #check for ok param values
-         preWts[i] <- exp(log(auxWts[i]))*wts[i] #first resample weights
+         logAuxWts[i] <- calculate(model, calc_thisNode_deps)
+         if(is.nan(logAuxWts[i])) logAuxWts[i] <- -Inf #check for ok param values
+         logPreWts[i] <- logAuxWts[i] + logWts[i] #first resample weights
        }
-       rankSample(preWts, m, ids, silent)
+       maxWt <- max(logPreWts)
+       wts <- exp(logPreWts - maxWt)  ## compilation failure if temp variable not created
+       rankSample(wts, m, ids, silent)
        # Reassign weights and pars so that cov matrix is calculated correctly
        for(i in 1:m){
          copy(mvWSamples, mvEWSamples, nodes = prevXName, nodesTo = prevXName, row = ids[i], rowTo = i)
-         wts[i] <- exp(mvWSamples['wts',ids[i]][prevInd] )
+         logWts[i] <- mvWSamples['wts',ids[i]][prevInd] 
        }
        for(j in 1:numParamVars){
          if(varSize[j] == 1){
@@ -228,63 +224,60 @@ LWStep <- nimbleFunction(
            tmpPars[(paramInds[j]+1):paramInds[j+1], ] <- doVarList[[j]]$vectorGet(1, m, varSize[j])
          }
        }
-       parChol <- parCalc$cholesVar(m,wts,tmpPars) #  calculate MC cov matrix
-     }
+       parChol <- parCalc$cholesVar(m,logWts,tmpPars) #  calculate MC cov matrix
+    }
     for(i in 1:m) {
-       if(notFirst) {  
-           if(singleParam == 1){
-            tmpPars[1,i] <- rnorm(1, meanVec[1,ids[i]],  parChol[1,1])
-            values(model, paramNodes) <<- tmpPars[,i]
-           }
-          else{
-           tmpPars[,i] <- rmnorm_chol(1, meanVec[,ids[i]],  parChol, prec_param=0) 
-           values(model, paramNodes) <<- tmpPars[,i]
-          }
-         copy(mvWSamples, model, nodes = prevXName, nodesTo = prevNode, row = ids[i]) 
-       }
-       else{
-         simulate(model, paramNodes)
-         tmpPars[,i] <- values(model,paramNodes)
-       }
+      if(notFirst) {  
+        if(singleParam == 1){
+          tmpPars[1,i] <- rnorm(1, meanVec[1,ids[i]],  parChol[1,1])
+          values(model, paramNodes) <<- tmpPars[,i]
+        } else{
+          tmpPars[,i] <- rmnorm_chol(1, meanVec[,ids[i]],  parChol, prec_param=0) 
+          values(model, paramNodes) <<- tmpPars[,i]
+        }
+        copy(mvWSamples, model, nodes = prevXName, nodesTo = prevNode, row = ids[i]) 
+      } else{
+        simulate(model, paramNodes)
+        tmpPars[,i] <- values(model,paramNodes)
+      }
       calculate(model, parAndPrevDeterm) 
       simulate(model, calc_thisNode_self)
       copy(model, mvWSamples, nodes = thisNode, nodesTo = thisXName, rowTo = i)
-      l[i]  <- exp(calculate(model, calc_thisNode_deps))
-      if(is.nan(l[i])) l[i] <- 0
+      ll[i]  <- calculate(model, calc_thisNode_deps)
+      if(is.nan(ll[i])) ll[i] <- -Inf
       #rescale weights by pre-sampling weight
       if(notFirst)
-        wts[i] <- log(l[i])-log(auxWts[ids[i]])
-      else 
-        wts[i] <- log(l[i])
-      mvWSamples['wts',i][currInd] <<- wts[i] 
+        logWts[i] <- ll[i] - logAuxWts[ids[i]]
+      else logWts[i] <- ll[i]
+      mvWSamples['wts',i][currInd] <<- logWts[i] 
       ids[i] <- i
     }
-     for(j in 1:numParamVars){
-       if(varSize[j] == 1){
-         doVarList[[j]]$scalarSet(tmpPars[paramInds[j+1], ], 1 ,m, ids)
-       }
-       else{
-         doVarList[[j]]$vectorSet(tmpPars[(paramInds[j]+1):paramInds[j+1], ], 1 ,m, ids)
-       }
-     }   
-     if(isLast){
-       for(i in 1:m){
-         wts[i] <-  exp(mvWSamples['wts',i][currInd])
-       }
-       rankSample(wts, m, ids, silent)
-       for(i in 1:m){
-         copy(mvWSamples, mvEWSamples, thisXName, thisXName, ids[i], i)
-       }
-       for(j in 1:numParamVars){
-         if(varSize[j] == 1){
-           doVarList[[j]]$scalarSet(tmpPars[paramInds[j+1], ], 0 ,m, ids)
-         }
-         else{
-           doVarList[[j]]$vectorSet(tmpPars[(paramInds[j]+1):paramInds[j+1], ], 0 ,m, ids)
-         }
-       } 
-     }
-  return(0)
+    for(j in 1:numParamVars){
+      if(varSize[j] == 1){
+        doVarList[[j]]$scalarSet(tmpPars[paramInds[j+1], ], 1 ,m, ids)
+      } else{
+        doVarList[[j]]$vectorSet(tmpPars[(paramInds[j]+1):paramInds[j+1], ], 1 ,m, ids)
+      }
+    }   
+    if(isLast){
+      for(i in 1:m){
+        logWts[i] <-  mvWSamples['wts',i][currInd]
+      }
+      maxWt <- max(logWts)
+      wts <- exp(logWts - maxWt)
+      rankSample(wts, m, ids, silent)
+      for(i in 1:m){
+        copy(mvWSamples, mvEWSamples, thisXName, thisXName, ids[i], i)
+      }
+      for(j in 1:numParamVars){
+        if(varSize[j] == 1){
+          doVarList[[j]]$scalarSet(tmpPars[paramInds[j+1], ], 0 ,m, ids)
+        } else{
+          doVarList[[j]]$vectorSet(tmpPars[(paramInds[j]+1):paramInds[j+1], ], 0 ,m, ids)
+        }
+      } 
+    }
+    return(0)
   }
 )
 
@@ -299,23 +292,22 @@ LWparFunc <- nimbleFunction(
     a <- sqrt(1-hsq)
   },  
   methods = list(                        
-    shrinkMean = function(m = integer(), wts = double(1), pars = double(2)) {
-      ## declare(oneMat, double(1, m))
-      ## for(i in 1:m){
-      ##   oneMat[i] <- 1
-        ## }
+    shrinkMean = function(m = integer(), logWts = double(1), pars = double(2)) {
       oneMat <- numeric(m, value = 1)
-      wts <- wts/sum(wts)
+      maxWt <- max(logWts)
+      wts <- exp(logWts - maxWt)  # don't modify logWts here as pass-by-reference in compiled code
+      wts <- wts / sum(wts)
       parMean <- (pars%*%wts)%*%oneMat
       wtMean <- a*pars + (1-a)*parMean  
       returnType(double(2))
       return(wtMean)
     },
-    cholesVar = function(m = integer(), wts = double(1), pars = double(2)){
-        ##declare(varMat, double(2, c(parDim, parDim)))
-        varMat <- matrix(nrow = parDim, ncol = parDim, value = 0)
-        returnType(double(2)) 
-      wts <- wts/sum(wts)
+    cholesVar = function(m = integer(), logWts = double(1), pars = double(2)){
+      varMat <- matrix(nrow = parDim, ncol = parDim, value = 0)
+      returnType(double(2)) 
+      maxWt <- max(logWts)  
+      wts <- exp(logWts - maxWt)  # don't modify logWts here as pass-by-reference in compiled code
+      wts <- wts / sum(wts)
       wMean <- pars%*%wts 
       for(i in 1:m)
         varMat <- varMat + wts[i]*((pars[,i]-wMean)%*%t(pars[,i]-wMean))
@@ -509,9 +501,10 @@ buildLiuWestFilter <- nimbleFunction(
     if(initModel == TRUE) my_initializeModel$run()
     resize(mvWSamples, m)
     resize(mvEWSamples, m)
-    
+
+    initWt <- -log(m)
     for(i in 1:m)
-      mvWSamples['wts',i][1] <<- log(1/m)
+      mvWSamples['wts',i][1] <<- initWt
     
     for(iNode in seq_along(LWStepFunctions)) {
        LWStepFunctions[[iNode]]$run(m)

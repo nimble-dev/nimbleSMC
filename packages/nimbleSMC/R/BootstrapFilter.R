@@ -52,8 +52,7 @@ bootFStep <- nimbleFunction(
         currInd <- 1
         prevInd <- 1
       }
-    }
-    else{
+    } else {
       allPrevNodes <- names
       prevXName <- names    
       thisXName <- names
@@ -106,13 +105,13 @@ bootFStep <- nimbleFunction(
       if(prevSamp == 0){ ## defaults to 1 for first step and then comes from the previous step
         wts[i] <- wts[i] + mvWSamples['wts',i][prevInd]
         llEst[i] <- wts[i]
-      }
-      else{
+      } else {
           llEst[i] <- wts[i] - log(m)
       }
     }
-    
-    stepllEst <- log(sum(exp(llEst)))
+
+    maxllEst <- max(llEst)
+    stepllEst <- maxllEst + log(sum(exp(llEst - maxllEst)))
     if(is.nan(stepllEst)){
       out[1] <- -Inf
       out[2] <- 0
@@ -126,16 +125,16 @@ bootFStep <- nimbleFunction(
     
     out[1] <- stepllEst
     
-    ## Normalize weights and calculate effective sample size .
-    wts <- exp(wts)/sum(exp(wts))
+    ## Normalize weights and calculate effective sample size, using log-sum-exp trick to avoid underflow.
+    maxWt <- max(wts)
+    wts <- exp(wts - maxWt)/sum(exp(wts - maxWt))
     ess <<- 1/sum(wts^2) 
-    
+
     ## Determine whether to resample by weights or not.
     if(ess < threshNum){
       if(defaultResamplerFlag){
         rankSample(wts, m, ids, silent)	 
-      }
-      else{
+      } else {
         ids <- resamplerFunctionList[[1]]$run(wts)  
       }
       ## out[2] is an indicator of whether resampling takes place.
@@ -150,8 +149,7 @@ bootFStep <- nimbleFunction(
         }
         mvWSamples['wts',i][currInd] <<- log(wts[i])
       }
-    }
-    else{
+    } else {
       out[2] <- 0
       for(i in 1:m){
         copy(mvWSamples, mvEWSamples, nodes = thisXName, nodesTo = thisXName,
@@ -311,8 +309,7 @@ buildBootstrapFilter <- nimbleFunction(
                                               types = type,
                                               sizes = size))
       
-    }
-    else{
+    } else {
       names <- sapply(modelSymbolObjects, function(x)return(x$name))
       type <- sapply(modelSymbolObjects, function(x)return(x$type))
       size <- lapply(modelSymbolObjects, function(x)return(x$size))
