@@ -16,7 +16,7 @@ nimbleSMC_$(VERSION).tar.gz: FORCE
 build: nimbleSMC_$(VERSION).tar.gz
 
 install: nimbleSMC_$(VERSION).tar.gz
-	R CMD INSTALL ${NDIR} nimbleSMC_$(VERSION).tar.gz
+	R CMD INSTALL --install-tests ${NDIR} nimbleSMC_$(VERSION).tar.gz
 
 check: build FORCE
 	R CMD check --as-cran nimbleSMC_$(VERSION).tar.gz

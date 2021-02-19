@@ -152,13 +152,11 @@ weightedMetricFunc <- function(index, samples, weights, metric, samplesToWeights
 compareFilesByLine <- function(trialResults, correctResults, main = "") {
     trialResults <- stripTestPlacementWarning(trialResults)
     correctResults <- stripTestPlacementWarning(correctResults)
-    test_that(paste0(main, ': same number of output lines'),
-          expect_equal(length(trialResults), length(correctResults)))
+    expect_equal(length(trialResults), length(correctResults))
     
     linesToTest <- min(length(trialResults), length(correctResults))
     mapply(function(lineno, trialLine, correctLine) {
-        test_that(paste0(main, ": output line #", lineno),
-                  expect_identical(trialLine, correctLine))
+        expect_identical(trialLine, correctLine)
     }, 1:linesToTest, trialResults, correctResults)
     invisible(NULL)
 }
@@ -1138,10 +1136,11 @@ test_that("Test findLatentNodes", {
 sink(NULL)
 
 if (!generatingGoldFile) {
-    trialResults <- readLines(tempFileName)
-    correctResults <- readLines(system.file(file.path('test-utils', goldFileName), package = 'nimbleSMC'))
-    # correctResults <- readLines("tests/filteringTestLog_Correct.Rout")
-    compareFilesByLine(trialResults, correctResults)
+    test_that("Log file matches gold file", {
+        trialResults <- readLines(tempFileName)
+        correctResults <- readLines(system.file(file.path('test-utils', goldFileName), package = 'nimbleSMC'))
+        compareFilesByLine(trialResults, correctResults)
+    })
 }
 
 
