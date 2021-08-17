@@ -1072,8 +1072,8 @@ test_that("IF2", {
     ## Expect values similar to what obtained in version 0.9.0.
     expect_gt(cFilter$logLik[niter], -627.5, ) 
     expect_lt(exp(est[1]), 10)
-    expect_equal(exp(est[2]), 126, tolerance = 10)
-    expect_equal(est[3], -271, tolerance = 10)
+    expect_lt(abs(exp(est[2]) - 126), 10)
+    expect_lt(abs(est[3] + 271), 10)
 })
 
 
@@ -1211,18 +1211,18 @@ test_that('initializeModel works correctly for state space models', {
     set.seed(0)
     Cinit$run()
     
-    expect_equal(Rmodel$calculate(), -77.49817, tol = 0.000001)
-    expect_equal(Cmodel$calculate(), -77.49817, tol = 0.000001)
+    expect_lt(abs(Rmodel$calculate() + 77.49817), 0.000001)
+    expect_lt(abs(Cmodel$calculate() + 77.49817), 0.000001)
     
     stateSpaceModel<-nimbleModel(code = stateSpaceCode,data = datalist,constants=constants,inits = inits, calculate = FALSE)
     bootstrapFilter<-buildBootstrapFilter(stateSpaceModel,nodes='prob',control=list(saveAll=TRUE))
     compiledList<-compileNimble(stateSpaceModel,bootstrapFilter)
     
     set.seed(0)
-    expect_equal(bootstrapFilter$run(10), -52.78133, tol = 0.000001)
+    expect_lt(abs(bootstrapFilter$run(10) + 52.78133), 0.000001)
     
     set.seed(0)
-    expect_equal(compiledList$bootstrapFilter$run(10), -52.78133, tol = 0.000001)
+    expect_lt(abs(compiledList$bootstrapFilter$run(10) + 52.78133), 0.000001)
 })
 
 
