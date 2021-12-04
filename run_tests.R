@@ -31,9 +31,6 @@ if (length(grep('^-', argv, invert = TRUE))) {
     allTests <- allTests[grepl('test-.*\\.R', allTests)]
 }
 
-# Parallelize tests by splitting them up into batches.
-# We use the Best Fit Decreasing heuristic to approximatly solve this 1-D bin packing problem.
-
 cat('PLANNING TO TEST', allTests, sep = '\n  ')
 if (optionDryRun) quit()
 
