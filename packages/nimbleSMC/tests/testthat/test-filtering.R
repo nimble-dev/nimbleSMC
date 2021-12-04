@@ -912,10 +912,11 @@ test_filter(model = code, name = 'multivariate auxiliary', data = testdata, filt
 ## On Windows the next test can create a DLL name conflict and look
 ## up the wrong C++ class, from a previous DLL.  Hence this will be the break
 ## into two windows test units
-if(FALSE && .Platform$OS.type == 'windows') {
-    message("Stopping filtering test here on Windows to avoid multiple DLL problems. Run test-filtering2 to continue")
-    stop()
-}
+## Update (2021-12-04): all tests seem to pass on Windows now, so commenting out.
+## if(.Platform$OS.type == 'windows') {
+##     message("Stopping filtering test here on Windows to avoid multiple DLL problems. Run test-filtering2 to continue")
+##     stop()
+## }
 
 test_filter(model = code, name = 'multivariate auxiliary mean lookahead', data = testdata, filterType = "auxiliary", latentNodes = "x", inits = list(a = rep(0,3), b = 1),
              filterControl = list(saveAll = TRUE, timeIndex = 1, lookahead = "mean"),
