@@ -241,11 +241,11 @@ IF2Step <- nimbleFunction(
 #' ## Cmodel <- compileNimble(model)
 #' ## Cmy_IF2 <- compileNimble(my_IF2, project = model)
 #' ## MLE estimate of a top level parameter named sigma_x:
-#' ## sigma_x_MLE <- Cmy_IF2$run(m = 10000, n = 10)
-#' ## Continue running algorithm for more precise estimate:
-#' ## sigma_x_MLE <- Cmy_IF2$continueRun(n = 10)
+#' ## sigma_x_MLE <- Cmy_IF2$run(m = 10000, n = 50, alpha = 0.2)
 #' ## visualize progression of the estimated log-likelihood
-#' ## ts.plot(CmyIF2$logLik)
+#' ## ts.plot(Cmy_IF2$logLik)
+#' ## Continue running algorithm for more precise estimate:
+#' ## sigma_x_MLE <- Cmy_IF2$continueRun(n = 50, alpha = 0.2)
 buildIteratedFilter2 <- nimbleFunction(
     setup = function(model, nodes, params = NULL, baselineNode = NULL, control = list()){
         
@@ -426,14 +426,15 @@ buildIteratedFilter2 <- nimbleFunction(
             }
             estSD[j, ] <<- sqrt(estSD[j, ] / m)
         }
-
         estimate <<- estimates[niter, ]
 
         ## Put final parameter estimates into model.
         values(model, params) <<- estimate  
         model$calculate(parDeterm)
         oldM <<- m
-        oldJ <<- j 
+        oldJ <<- j
+        if(oldJ != niter)
+            oldJ <<- niter  ## C++ for loop apparently increments by one at end of loop
         
         returnType(double(1))
         return(estimate)
