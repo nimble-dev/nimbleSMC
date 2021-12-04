@@ -71,7 +71,7 @@ runTest <- function(test, logToFile = FALSE, runViaTestthat = TRUE) {
                          '  error = function(e) quit(status = 1))')
         command <- c(runner, '-e', custom_shQuote(script))
     } else {
-        command <- c(runner, file.path('packages', 'nimbleSMC', 'testthat', 'tests', test))
+        command <- c(runner, file.path('packages', 'nimbleSMC', 'tests', 'testthat', test))
     }
     Sys.setenv(MAKEFLAGS = '-j1')  # Work around broken job pipe when GNU make is run under mclapply.
     if (logToFile) {
