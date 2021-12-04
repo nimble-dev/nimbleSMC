@@ -5,20 +5,31 @@ note <- sprintf("{R} package version %s", meta$Version)
 noteManual <- sprintf("{R} package manual version %s", meta$Version)
 
 
-bibentry(
- bibtype = "techreport",
- title = "Sequential {M}onte {C}arlo methods in the nimble {R} package", 
-  year = "2020",
- author = c(person("N.", "Michaud"),
-            person("P.", "de Valpine"),
-            person("D.", "Turek"),
-            person("C.J.", "Paciorek"),
-            person("D.", "Nguyen")),
- institution = "arXiv preprint",
- number = "arxiv:1703.06206",
-  textVersion = "N. Michaud, de Valpine, P., D. Turek, C.J. Paciorek, D. Nguyen. 2017. Sequential Monte Carlo Methods in the nimble R Package. arXiv. <arXiv:1703.06206>."
+bibentry(bibtype = "Article",
+  title        = "Sequential {M}onte {C}arlo Methods in the {nimble} and {nimbleSMC} {R} Packages",
+  author       = c(person(given = "Nicholas",
+                          family = "Michaud",
+                          email = "nicholas.michaud@gmail.com"),
+                   person(given = "Perry",
+                          family = "De Valpine",
+                          email = "pdevalpine@berkeley.edu"),
+                   person(given = "Daniel",
+                          family = "Turek",
+                          email = "dbt1@williams.edu"),
+                   person(given = c("Christopher", "J."),
+                          family = "Paciorek",
+                          email = "paciorek@stat.berkeley.edu"),
+                   person(given = "Dao",
+                          family = "Nguyen",
+                          email = "dxnguyen@olemiss.edu")),
+  journal      = "Journal of Statistical Software",
+  year         = "2021",
+  volume       = "100",
+  number       = "3",
+  pages        = "1--39",
+  doi          = "10.18637/jss.v100.i03",
+  header       = "To cite nimbleSMC in publications use:"
 )
-
 
 bibentry(
  bibtype = "misc",

@@ -912,7 +912,7 @@ test_filter(model = code, name = 'multivariate auxiliary', data = testdata, filt
 ## On Windows the next test can create a DLL name conflict and look
 ## up the wrong C++ class, from a previous DLL.  Hence this will be the break
 ## into two windows test units
-if(.Platform$OS.type == 'windows') {
+if(FALSE && .Platform$OS.type == 'windows') {
     message("Stopping filtering test here on Windows to avoid multiple DLL problems. Run test-filtering2 to continue")
     stop()
 }
