@@ -83,10 +83,10 @@ jobs:
         run: |
           RCMD INSTALL --install-tests packages\\nimbleSMC
 
-      - name: Install nimble
+      - name: Install nimbleSMC
         if: runner.os != 'Windows'
         run: |
-          R CMD build packages/nimble  # Is this needed? Is purpose of this to see if 'build' induces an error?
+          R CMD build packages/nimbleSMC  # Is this needed? Is purpose of this to see if 'build' induces an error?
           R CMD INSTALL --install-tests packages/nimbleSMC
 
       - name: Run tests
