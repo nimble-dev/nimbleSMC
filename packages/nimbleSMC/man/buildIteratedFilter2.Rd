@@ -4,8 +4,13 @@
 \alias{buildIteratedFilter2}
 \title{Create an IF2 algorithm.}
 \usage{
-buildIteratedFilter2(model, nodes, params = NULL, baselineNode = NULL,
-  control = list())
+buildIteratedFilter2(
+  model,
+  nodes,
+  params = NULL,
+  baselineNode = NULL,
+  control = list()
+)
 }
 \arguments{
 \item{model}{A NIMBLE model object, typically representing a state 
@@ -69,6 +74,7 @@ While NIMBLE's IF2 algorithm requires prior distributions on the parameters, the
 
 The IF2 algorithm stores the estimated MLEs, one from each iteration, in \code{estimates}. It also stores standard deviation of the particles from each iteration, one per parameter, in \code{estSD}. Finally it stores the estimated log-likelihood at the estimated MLE from each iteration in \code{logLik}.
 }
+
 \examples{
 ## For illustration only.
 exampleCode <- nimbleCode({
@@ -89,22 +95,23 @@ my_IF2 <- buildIteratedFilter2(model, 'x', params = 'sigma_x')
 ## Cmodel <- compileNimble(model)
 ## Cmy_IF2 <- compileNimble(my_IF2, project = model)
 ## MLE estimate of a top level parameter named sigma_x:
-## sigma_x_MLE <- Cmy_IF2$run(m = 10000, n = 10)
-## Continue running algorithm for more precise estimate:
-## sigma_x_MLE <- Cmy_IF2$continueRun(n = 10)
+## sigma_x_MLE <- Cmy_IF2$run(m = 10000, n = 50, alpha = 0.2)
 ## visualize progression of the estimated log-likelihood
-## ts.plot(CmyIF2$logLik)
-}
-\author{
-Nicholas Michaud, Dao Nguyen, and Christopher Paciorek
+## ts.plot(Cmy_IF2$logLik)
+## Continue running algorithm for more precise estimate:
+## sigma_x_MLE <- Cmy_IF2$continueRun(n = 50, alpha = 0.2)
 }
 \references{
 Ionides, E.L., D. Nguyen, Y. Atchad{\'e}, S. Stoev, and A.A. King (2015). Inference for dynamic and latent variable models via iterated, perturbed Bayes maps. \emph{Proceedings of the National Academy of Sciences}, 112(3), 719-724.
 }
 \seealso{
-Other particle filtering methods: \code{\link{buildAuxiliaryFilter}},
-  \code{\link{buildBootstrapFilter}},
-  \code{\link{buildEnsembleKF}},
-  \code{\link{buildLiuWestFilter}}
+Other particle filtering methods: 
+\code{\link{buildAuxiliaryFilter}},
+\code{\link{buildBootstrapFilter}},
+\code{\link{buildEnsembleKF}},
+\code{\link{buildLiuWestFilter}}
 }
-
+\author{
+Nicholas Michaud, Dao Nguyen, and Christopher Paciorek
+}
+\concept{particle filtering methods}

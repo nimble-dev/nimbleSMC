@@ -62,16 +62,18 @@ my_enKF <- buildEnsembleKF(model, 'x',
 ## Cmy_enKF$run(m = 1000)
 ## enKF_X <- as.matrix(Cmy_enKF$mvSamples, 'x')
 }
-\author{
-Nicholas Michaud
-}
 \references{
 Houtekamer, P.L., and H.L. Mitchell. (1998). Data assimilation using an ensemble Kalman filter technique. \emph{Monthly Weather Review}, 126(3), 796-811.
 }
 \seealso{
-Other particle filtering methods: \code{\link{buildAuxiliaryFilter}},
-  \code{\link{buildBootstrapFilter}},
-  \code{\link{buildIteratedFilter2}},
-  \code{\link{buildLiuWestFilter}}
+Other particle filtering methods: 
+\code{\link{buildAuxiliaryFilter}},
+\code{\link{buildBootstrapFilter}},
+\code{\link{buildIteratedFilter2}()},
+\code{\link{buildLiuWestFilter}}
 }
-
+\author{
+Nicholas Michaud
+}
+\concept{filtering methods}
+\concept{particle filtering methods}

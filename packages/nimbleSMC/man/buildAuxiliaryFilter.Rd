@@ -77,18 +77,19 @@ my_AuxF <- buildAuxiliaryFilter(model, 'x',
 ## Cmy_AuxF <- compileNimble(my_AuxF, project = model)
 ## logLik <- Cmy_AuxF$run(m = 1000)
 ## ESS <- Cmy_AuxF$returnESS()
-## aux__X <- as.matrix(Cmy_AuxF$mvEWSamples, 'x')
-}
-\author{
-Nicholas Michaud
+## aux_X <- as.matrix(Cmy_AuxF$mvEWSamples, 'x')
 }
 \references{
 Pitt, M.K., and Shephard, N. (1999). Filtering via simulation: Auxiliary particle filters. \emph{Journal of the American Statistical Association} 94(446): 590-599.
 }
 \seealso{
-Other particle filtering methods: \code{\link{buildBootstrapFilter}},
-  \code{\link{buildEnsembleKF}},
-  \code{\link{buildIteratedFilter2}},
-  \code{\link{buildLiuWestFilter}}
+Other particle filtering methods: 
+\code{\link{buildBootstrapFilter}},
+\code{\link{buildEnsembleKF}},
+\code{\link{buildIteratedFilter2}()},
+\code{\link{buildLiuWestFilter}}
 }
-
+\author{
+Nicholas Michaud
+}
+\concept{particle filtering methods}
