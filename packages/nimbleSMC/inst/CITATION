@@ -1,4 +1,4 @@
-citHeader("In published work that uses or mentions NIMBLE, please cite the Journal of Statistical Software article (which has the same title as the arXiv preprint below) when it is available, or the arXiv preprint before then. In work that uses NIMBLE, please also cite the R package for the specific version used. To help us track usage to justify funding support for NIMBLE, please include the DOI in the citation.")
+citHeader("In published work that uses or mentions nimbleSMC, please cite the Journal of Statistical Software article. In work that uses nimbleSMC, please also cite the R package for the specific version used. To help us track usage to justify funding support for nimbleSMC, please include the DOI in the citation.")
 
 year <- sub("-.*", "", meta$Date)
 note <- sprintf("{R} package version %s", meta$Version)
