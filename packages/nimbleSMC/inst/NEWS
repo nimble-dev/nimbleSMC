@@ -1,3 +1,19 @@
+                        CHANGES IN VERSION 0.10.1 (December 2021)
+
+BUG FIXES
+
+-- Ensure that IF2 correctly handles switchover from run to continueRun given C++ increments loop counter at conclusion of loop (see nimble repo issue 1184).
+
+DEVELOPER LEVEL CHANGES
+
+-- Avoid numerical problems from underflow caused by exponentiating weights in various filters (PR #4).
+
+-- Switch citation to newly-published JSS paper.
+
+-- Make various cleanups to testing.
+
+-- Move continuous integration testing to GitHub Actions.
+
                         CHANGES IN VERSION 0.10.0 (October 2020)
 
 Sequential Monte Carlo functionality was moved from the core nimble package as of nimble version 0.10.0.

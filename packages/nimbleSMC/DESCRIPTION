@@ -6,7 +6,7 @@ Description: Includes five particle filtering algorithms for use with state spac
     <doi:10.18637/jss.v100.i03>. A full User Manual is available at
     <https://r-nimble.org>.     
 Version: 0.10.1
-Date: 2021-12-07
+Date: 2021-12-08
 Maintainer: Christopher Paciorek <paciorek@stat.berkeley.edu>
 Authors@R: c(person("Nick", "Michaud", role = "aut"),
               person("Perry", "de Valpine", role = "aut"),
@@ -20,12 +20,9 @@ Copyright: See COPYRIGHTS file.
 Depends:
     R (>= 3.1.2),
     nimble (>= 0.10.0)
-Imports:
-    methods
 Suggests:
     testthat
 Encoding: UTF-8
-LazyData: true
 URL: https://r-nimble.org, https://github.com/nimble-dev/nimbleSMC
 Collate:
     AuxiliaryFilter.R
