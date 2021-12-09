@@ -20,6 +20,8 @@ Copyright: See COPYRIGHTS file.
 Depends:
     R (>= 3.1.2),
     nimble (>= 0.10.0)
+Imports:
+    methods
 Suggests:
     testthat
 Encoding: UTF-8

@@ -1,4 +1,5 @@
 #' @import nimble
+#' @import methods
 
 particleFilter_splitModelSteps <- function(model,
                                            nodes,
