@@ -24,7 +24,6 @@ Imports:
     methods
 Suggests:
     testthat
-Encoding: UTF-8
 URL: https://r-nimble.org, https://github.com/nimble-dev/nimbleSMC
 Collate:
     AuxiliaryFilter.R
