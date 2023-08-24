@@ -167,7 +167,7 @@ IF2Step <- nimbleFunction(
 #'
 #' @param model A NIMBLE model object, typically representing a state 
 #'  space model or a hidden Markov model.
-#' @param nodes  A character vector specifying the latent model nodes 
+#' @param nodes  A character vector specifying the stochastic latent model nodes 
 #'  over which the particle filter will stochastically integrate to
 #'  estimate the log-likelihood function.  All provided nodes must be stochastic.
 #'  Can be one of three forms: a variable name, in which case all elements in the variable

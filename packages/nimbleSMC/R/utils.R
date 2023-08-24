@@ -160,6 +160,11 @@ findLatentNodes <- function(model, nodes, timeIndex = NULL) {
             cnt <- cnt + 1
         }
     }
+    if(!all(model$isStoch(nodes))) {
+        wh <- which(!model$isStoch(nodes))
+        stop("findLatentNodes: found latent nodes that are not stochastic: ",
+             paste(nodes[wh], collapse = ', '), ". The `nodes` argument when building a filter must contain only stochastic nodes.")
+    }
     return(nodes)
 }
 

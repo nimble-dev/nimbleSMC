@@ -986,7 +986,9 @@ test_mcmc(model = code, name = 'scalar pmcmc', inits = inits, data = c(testdata,
   resultsTolerance = list(mean = list(sigma_x = .5,
                                       sigma_y = .5)))
 
-test_mcmc(model = code, name = 'block pmcmc', inits = inits, data = c(testdata, consts),  samplers = list(
+test_mcmc(model = code, name = 'block pmcmc', inits = inits, data = c(testdata, consts),
+          seed = 2, # This avoids warnings because of NAs from proposing negative sigma_y values.
+          samplers = list(
   list(type = 'RW_PF_block', target = c('sigma_x', 'sigma_y'), control = list(latents = 'x', m = 1000, resample = FALSE))),
   removeAllDefaultSamplers = TRUE, numItsC = 1000, results = list(
     mean = list(sigma_x = sigma_x,
