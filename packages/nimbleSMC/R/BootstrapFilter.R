@@ -3,7 +3,7 @@
 ##  and step function.
 
 bootStepVirtual <- nimbleFunctionVirtual(
-  run = function(m = integer(), threshNum=double(), prevSamp = logical()) {
+  run = function(m = integer(), threshNum=double(), prevSamp = logical(),tstep=double()) {
     returnType(double(1))
   },
   methods = list(
@@ -77,7 +77,8 @@ bootFStep <- nimbleFunction(
   },
   run = function(m = integer(),
                  threshNum = double(),
-                 prevSamp = logical()) {
+                 prevSamp = logical(),
+                 tstep = double()) {
     returnType(double(1))
     wts <- numeric(m, init=FALSE)
     ids <- integer(m, 0)
@@ -97,6 +98,7 @@ bootFStep <- nimbleFunction(
       ## The logProbs of calc_thisNode_self are, correctly, not calculated.
       copy(model, mvWSamples, nodes = thisNode, nodesTo = thisXName, row = i)
       wts[i]  <- model$calculate(calc_thisNode_deps)
+                
       if(is.nan(wts[i])){
         out[1] <- -Inf
         out[2] <- 0
@@ -109,7 +111,7 @@ bootFStep <- nimbleFunction(
           llEst[i] <- wts[i] - log(m)
       }
     }
-
+    
     maxllEst <- max(llEst)
     stepllEst <- maxllEst + log(sum(exp(llEst - maxllEst)))
     if(is.nan(stepllEst)){
@@ -124,7 +126,7 @@ bootFStep <- nimbleFunction(
     }
     
     out[1] <- stepllEst
-    
+
     ## Normalize weights and calculate effective sample size, using log-sum-exp trick to avoid underflow.
     maxWt <- max(wts)
     wts <- exp(wts - maxWt)/sum(exp(wts - maxWt))
@@ -350,7 +352,7 @@ buildBootstrapFilter <- nimbleFunction(
     for(iNode in seq_along(bootStepFunctions)) {
       if(iNode == length(bootStepFunctions))
         threshNum <- m  ## always resample at last time step so mvEWsamples is equally-weighted
-      out <- bootStepFunctions[[iNode]]$run(m, threshNum, prevSamp)
+      out <- bootStepFunctions[[iNode]]$run(m, threshNum, prevSamp, tstep = iNode)
       logL <- logL + out[1]
       prevSamp <- out[2]
       essVals[iNode] <<- bootStepFunctions[[iNode]]$returnESS()
