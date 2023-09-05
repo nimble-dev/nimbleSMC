@@ -119,14 +119,14 @@ ENKFStep <- nimbleFunction(
   },
   run = function(m = integer()) {
     #declare(xf, double(2, c(xDim, m))) 
-      xf <- matrix(nrow = xDim, ncol = m, init=FALSE)
-      ##declare(yf, double(2, c(yLength, m)))
-      yf <- matrix(nrow = yLength, ncol = m, init=FALSE)
-      ##declare(varMat, double(2, c(yLength, yLength))) # combined covariance matrix for all depndent nodes
-      varMat <- matrix(nrow = yLength, ncol = yLength, init=FALSE)
-      ##declare(perturb, double(2, c(yLength, m)))  # matrix for perturbed observations  
-      perturb <- matrix(nrow = yLength, ncol = m, init=FALSE)
-      declare(md, double())
+    xf <- matrix(nrow = xDim, ncol = m, init=FALSE)
+    ##declare(yf, double(2, c(yLength, m)))
+    yf <- matrix(nrow = yLength, ncol = m, init=FALSE)
+    ##declare(varMat, double(2, c(yLength, yLength))) # combined covariance matrix for all depndent nodes
+    varMat <- matrix(nrow = yLength, ncol = yLength, init=FALSE)
+    ##declare(perturb, double(2, c(yLength, m)))  # matrix for perturbed observations  
+    perturb <- matrix(nrow = yLength, ncol = m, init=FALSE)
+    declare(md, double())
     md <- m  # make m a double for calculations
     if(yLength == 1){
       setSize(yObs, 1)
@@ -173,22 +173,27 @@ ENKFStep <- nimbleFunction(
     #  Analysis step
     #  first calculate approx Kalman gain matrix (pg. 350)
     oneVec <- numeric(m,1)
-    efx <- xf - (1/md)*(xf%*%oneVec%*%t(oneVec))
-    efy <- yf -  (1/md)*(yf%*%oneVec%*%t(oneVec))
-    kMat <- (1/(md-1))*efx%*%t(efy)%*%inverse((1/(md-1))*(efy%*%t(efy))+varMat)
-    
+
+    efx <- xf - (1/md) * ((xf %*% oneVec) %*% t(oneVec))
+    efy <- yf - (1/md) * ((yf %*% oneVec) %*% t(oneVec))
+    ## Inefficient direct inverse version:  
+    ## kMat <- (1/(md-1))*efx%*%t(efy)%*%inverse((1/(md-1))*(efy%*%t(efy))+varMat)
+      
     #  next, cycle through particles, create perturbed observations,
     #  and store in model values object
     if(yLength == 1){
+      kMat <- (1/(md-1)) * efx %*% t(efy) / ((1/(md-1)) * (efy %*% t(efy)) + varMat)
       for(i in 1:m){
         perturb[1,i] <-yObs[1] + rnorm(1, 0, sqrt(varMat[1,1]))
-        xFilterSamp <- xf[,i] + kMat%*%(perturb[,i] -yf[,i]) 
+        xFilterSamp <- xf[,i] + kMat %*% (perturb[,i] -yf[,i]) 
         values(model, thisNode) <<- xFilterSamp
         copy(model, mvSamples, thisNode, thisXSName, rowTo = i)
       }
     }
     else{
-      cholesky <- chol(varMat)    
+      cholesky <- chol(varMat)
+      chol2 <- chol((1/(md-1)) * (efy%*%t(efy)) + varMat)
+      kMat <- (1/(md-1)) * efx %*% t(backsolve(chol2, forwardsolve(t(chol2), efy)))
       for(i in 1:m){
         perturb[,i] <- yObs + rmnorm_chol(1, meanVec, cholesky, 0) 
         xFilterSamp <- xf[,i] + kMat%*%(perturb[,i] -yf[,i]) 
