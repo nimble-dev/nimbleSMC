@@ -1222,7 +1222,7 @@ test_that('initializeModel works correctly for state space models', {
     compiledList<-compileNimble(stateSpaceModel,bootstrapFilter)
 
     ## If set m=10, get threshNum = 8 exactly and weird floating point diffs between R and C
-    ## that change if resampling done in some time steps. Very weird.
+    ## that cause whether resampling in done in some time steps to change. Very weird.
     set.seed(0)
     expect_lt(abs(bootstrapFilter$run(12) + 51.38703), 0.00001)
     
