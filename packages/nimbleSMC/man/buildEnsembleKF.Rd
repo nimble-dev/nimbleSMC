@@ -9,7 +9,7 @@ buildEnsembleKF(model, nodes, control = list())
 \arguments{
 \item{model}{A NIMBLE model object, typically representing a state space model or a hidden Markov model}
 
-\item{nodes}{A character vector specifying the latent model nodes 
+\item{nodes}{A character vector specifying the stochastic latent model nodes 
 the Ensemble Kalman Filter will estimate. All provided nodes must be stochastic.
 Can be one of three forms: a variable name, in which case all elements in the variable
 are taken to be latent (e.g., 'x'); an indexed variable, in which case all indexed elements are taken
