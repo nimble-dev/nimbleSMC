@@ -5,7 +5,7 @@ Description: Includes five particle filtering algorithms for use with state spac
     'Iterated Filtering 2', and 'Liu-West', as described in Michaud et al. (2021),
     <doi:10.18637/jss.v100.i03>. A full User Manual is available at
     <https://r-nimble.org>.     
-Version: 0.11.0
+Version: 0.11.1
 Date: 2023-09-11
 Maintainer: Christopher Paciorek <paciorek@stat.berkeley.edu>
 Authors@R: c(person("Nick", "Michaud", role = "aut"),
