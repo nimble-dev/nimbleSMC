@@ -153,8 +153,10 @@ sampler_RW_PF <- nimbleFunction(
     if(!is.nan(newLP) & (newLP != -Inf)) {
         particleLP <- my_particleFilter$run(m)
         modelLP1 <- particleLP + getLogProb(model, target)
-        jump <- my_decideAndJump$run(modelLP1, modelLP0, 0, 0)
-    } else jump <- FALSE
+    } else {
+        modelLP1 <- -Inf
+    }
+    jump <- my_decideAndJump$run(modelLP1, modelLP0, 0, 0)
     if(!jump) {
       my_particleFilter$setLastLogLik(storeParticleLP)
     }
@@ -332,8 +334,10 @@ sampler_RW_PF_block <- nimbleFunction(
     if(!is.nan(newLP) & (newLP != -Inf)) {
         particleLP <- my_particleFilter$run(m)
         modelLP1 <- particleLP + getLogProb(model, target)
-        jump <- my_decideAndJump$run(modelLP1, modelLP0, 0, 0)
-    } else jump <- FALSE
+    } else {
+        modelLP1 <- -Inf
+    }
+    jump <- my_decideAndJump$run(modelLP1, modelLP0, 0, 0)
     if(!jump) {
       my_particleFilter$setLastLogLik(storeParticleLP)
     }
