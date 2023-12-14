@@ -149,8 +149,13 @@ sampler_RW_PF <- nimbleFunction(
     modelLP0 <- storeParticleLP + getLogProb(model, target)
     propValue <- rnorm(1, mean = model[[target]], sd = scale)
     my_setAndCalculate$run(propValue)
-    particleLP <- my_particleFilter$run(m)
-    modelLP1 <- particleLP + getLogProb(model, target)
+    newLP <- getLogProb(model, target)
+    if(!is.nan(newLP) & (newLP != -Inf)) {
+        particleLP <- my_particleFilter$run(m)
+        modelLP1 <- particleLP + getLogProb(model, target)
+    } else {
+        modelLP1 <- -Inf
+    }
     jump <- my_decideAndJump$run(modelLP1, modelLP0, 0, 0)
     if(!jump) {
       my_particleFilter$setLastLogLik(storeParticleLP)
@@ -325,8 +330,13 @@ sampler_RW_PF_block <- nimbleFunction(
     modelLP0 <- storeParticleLP + getLogProb(model, target)
     propValueVector <- generateProposalVector()
     my_setAndCalculate$run(propValueVector)
-    particleLP <- my_particleFilter$run(m)
-    modelLP1 <- particleLP + getLogProb(model, target)
+    newLP <- getLogProb(model, target)
+    if(!is.nan(newLP) & (newLP != -Inf)) {
+        particleLP <- my_particleFilter$run(m)
+        modelLP1 <- particleLP + getLogProb(model, target)
+    } else {
+        modelLP1 <- -Inf
+    }
     jump <- my_decideAndJump$run(modelLP1, modelLP0, 0, 0)
     if(!jump) {
       my_particleFilter$setLastLogLik(storeParticleLP)
