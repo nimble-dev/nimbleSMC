@@ -219,7 +219,7 @@ IF2Step <- nimbleFunction(
 #'  
 #' @export
 #' 
-#' @references Ionides, E.L., D. Nguyen, Y. Atchad{\'e}, S. Stoev, and A.A. King (2015). Inference for dynamic and latent variable models via iterated, perturbed Bayes maps. \emph{Proceedings of the National Academy of Sciences}, 112(3), 719-724.
+#' @references Ionides, E.L., D. Nguyen, Y. Atchad\u00e9, S. Stoev, and A.A. King (2015). Inference for dynamic and latent variable models via iterated, perturbed Bayes maps. \emph{Proceedings of the National Academy of Sciences}, 112(3), 719-724.
 #' 
 #' @examples
 #' ## For illustration only.
