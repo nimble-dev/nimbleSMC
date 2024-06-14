@@ -102,7 +102,7 @@ my_IF2 <- buildIteratedFilter2(model, 'x', params = 'sigma_x')
 ## sigma_x_MLE <- Cmy_IF2$continueRun(n = 50, alpha = 0.2)
 }
 \references{
-Ionides, E.L., D. Nguyen, Y. Atchadé, S. Stoev, and A.A. King (2015). Inference for dynamic and latent variable models via iterated, perturbed Bayes maps. \emph{Proceedings of the National Academy of Sciences}, 112(3), 719-724.
+Ionides, E.L., D. Nguyen, Y. \enc{Atchadé}{Atchade}, S. Stoev, and A.A. King (2015). Inference for dynamic and latent variable models via iterated, perturbed Bayes maps. \emph{Proceedings of the National Academy of Sciences}, 112(3), 719-724.
 }
 \seealso{
 Other particle filtering methods: 

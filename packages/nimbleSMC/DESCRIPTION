@@ -6,7 +6,7 @@ Description: Includes five particle filtering algorithms for use with state spac
     <doi:10.18637/jss.v100.i03>. A full User Manual is available at
     <https://r-nimble.org>.     
 Version: 0.11.1
-Date: 2024-06-12
+Date: 2024-06-14
 Maintainer: Christopher Paciorek <paciorek@stat.berkeley.edu>
 Authors@R: c(person("Nick", "Michaud", role = "aut"),
               person("Perry", "de Valpine", role = "aut"),
