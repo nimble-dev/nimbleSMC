@@ -111,7 +111,7 @@ sampler_RW_PF <- nimbleFunction(
     if(optimizeM) m <- 3000
     ## Nested function and function list definitions.
     my_setAndCalculate <- setAndCalculateOne(model, target)
-    my_decideAndJump <- decideAndJump(model, mvSaved, target, calcNodes)
+    my_decideAndJump <- decideAndJump(model, mvSaved, target)
     if(!is.null(existingPF)) {
       my_particleFilter <- existingPF
     } else {
@@ -290,7 +290,7 @@ sampler_RW_PF_block <- nimbleFunction(
     if(optimizeM)   m <- 3000
     ## nested function and function list definitions
     my_setAndCalculate <- setAndCalculate(model, target)
-    my_decideAndJump <- decideAndJump(model, mvSaved, target, calcNodes)
+    my_decideAndJump <- decideAndJump(model, mvSaved, target)
     my_calcAdaptationFactor <- calcAdaptationFactor(d, adaptFactorExponent)
     if(!is.null(existingPF)) {
       my_particleFilter <- existingPF
