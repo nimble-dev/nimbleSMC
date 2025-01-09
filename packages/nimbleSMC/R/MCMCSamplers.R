@@ -323,10 +323,17 @@ sampler_RW_PF_block <- nimbleFunction(
     if(!all(dim(propCov) == d))                         stop('propCov matrix must have dimension ', d, 'x', d, '\n')
     if(!isSymmetric(propCov))                           stop('propCov matrix must be symmetric')
     if(length(targetAsScalar) < 2)                      stop('less than two top-level targets; cannot use RW_PF_block sampler, try RW_PF sampler')
-    if(any(target%in%model$expandNodeNames(latents)))   stop('PMCMC \'target\' argument cannot include latent states')
+      if(any(target%in%model$expandNodeNames(latents)))   stop('PMCMC \'target\' argument cannot include latent states')
+      targetID <- 0
+      if(target[1] == "x") targetID <- 1
+      if(target[1] == "std2_1") targetID <- 2
+      if(target[1] == "rho") targetID <- 3
+      
   },
   run = function() {
-    storeParticleLP <<- my_particleFilter$getLastLogLik()
+      cat("starting sampler: ", targetID, "\n")
+      storeParticleLP <<- my_particleFilter$getLastLogLik()
+      cat("initial LL is ", storeParticleLP, "\n")
     modelLP0 <- storeParticleLP + getLogProb(model, target)
     propValueVector <- generateProposalVector()
     my_setAndCalculate$run(propValueVector)
