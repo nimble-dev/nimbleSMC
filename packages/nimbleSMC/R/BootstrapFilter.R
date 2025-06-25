@@ -361,17 +361,14 @@ buildBootstrapFilter <- nimbleFunction(
       if(logL == Inf)  {lastLogLik <<- -Inf; return(-Inf)} 
     }
     lastLogLik <<- logL
-    nimCat("lastLogLik is ", logL, "\n")
     return(logL)
   },
   methods = list(
       getLastLogLik = function() {
-          nimCat("getting lastLogLik as ", lastLogLik, "\n")
       return(lastLogLik)
       returnType(double())
     },
     setLastLogLik = function(lll = double()) {
-          nimCat("setting lastLogLik as ", lll, "\n")
       lastLogLik <<- lll
     },
     returnESS = function(){
